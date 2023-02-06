@@ -1,26 +1,37 @@
 Results
 
-In this study we applied GMM to data from cIMMS that varied in voltage, time and itensity. The main goal was to establish an automated method by which the number of gaussian peaks (as described by their mean and variance) within the total data for all voltages for a single slice from the original parent protein species could be determined. This would reveal the decomposition stability of the protein in response to voltages disruption. The mean and variation of decomposition peaks would help determine the positions at which the parent protein was most vulnerable to unfolding. 
+In this study we applied GMM to data from cIMMS that varied in voltage, time and itensity. The main goal was to establish an automated method by which the number of gaussian peaks within the total data for all voltages for a single slice from the original parent protein species could be determined. This would reveal the decomposition stability of the protein in response to voltages disruption. The mean and variation of decomposition peaks would help determine the positions at which the parent protein was most vulnerable to unfolding. 
+<br>
 
-Show one of the datasets 2D plots in full. Introduce the shape of the data using the hIAPP_A dataset. Shapes of other datasets can be in supplemental. 
-First Figure.
+![](./images/fig1_basic_data.png)
 
-Show code block for reading all the data in. 
+<br>
 
-Clustering methods, including GMM, are most frequently applied to 1D or 2D data. In this case, data is measured in time, voltage and intensity. The dimensionality of the data can be reduced to 2D by representing intensity as the number of points at a particular time point. If this clustering is per per voltage, only 1D clustering is required as shown below.
+Clustering methods, including GMM, can be applied to one, two or higher dimensional data. In this case, data is measured in time, voltage and intensity. If, however, the intensity dimension is represented by the number of data points at a given time measurement, the dimensionality is reduced. If the clustering is performed separately for each voltage, Gaussian peaks are fitted in a single dimension. The above plot is reproduced with the results from 1-D clustering. 
+<br>
 
-Second Figure show block of hIAPP_A processed in this way.
+![](./images/fig2_basic_w_clustering.png)
+
+<br>
+In the above clustering the number of components was estimated by k-means and was set to an initial value of 3, based on visual inspection of the data. Setting the alpha to almost completely transparent means the overlapping datapoints give a limited reflection of the data density. The 1D clustering appears reasonable at 0, 10, 20, 60 and 70 V but without the context of the complete voltage set, clustering at 30 - 50 V appears inaccurate; clearly clustering at higher dimensions is required, so the entirity of the data can be considered. 
+
+The datasets for separate voltages, each containing a number of datapoints proportional to the internsity at each time point, can be combined for modelling in 2D using the same principles for 1D clustering in Scikitlearn shown above. The shape of the data pre-modelling can be shown by combining the 1D datasets, again using transparancy to convey data intensity. More usefully, data intensity can be shown using either a 2D histogram or a contour plot. 
+
+![](./images/multiple_1D_hists.png)
+
+![](./images/2Dhist_and_contour.png)
+
+
+
+####up to here
+
+
 
 When performng GMM in SKL there are a number of parameters to be considered, of which two are properly important. Firstly, there is the method for picking the initial number of peaks, or components, that the EM algorithm will start with. Explain the options. Secondly, there is the covariance type. Explain this.
 
 The optimal number of components can be deduced using BIC, for which there is an inbuilt method in SKL. Explain how it works. This means that a steep drop in BIC will be observed with then number of initial components is optimal. 
 For this data I used examined he impacts of both full and diag covariance. Explain why. 
 
-The datasets for separate voltages, each containing a number of datapoints proportional to the internsity at each time point, can be combined for modelling in 2D using the same principles for 1D clustering in Scikitlearn shown above.
-
-The below figure shows the shape of the combined data pre-modelling. Datapoints are set to high transparancy, so darker points represent higher intensity. The high range of intensity measurments is better conveyed using a contour map of the data. 
-
-Show dot hist.
 
 Once the data for the entire hIAPP_sliceA dataset is arranged as a 2D histogram, GMM can be applied. I investigated the impact on BIC of choosing 2 - 6 initial components and setting covarience type to both full and diag. For all these inital components, I examined the success of modelling the peak distributions on by plotting colored peak distributions on to the above 'dot-style' histogram, plotting the propsed means and standard deviations on to this data and finally by plotting a reconstruction of the data shown as a contour map, including means.  
 
