@@ -15,22 +15,22 @@ Clustering methods, including GMM, can be applied to one, two or higher dimensio
 <br>
 In the above clustering the number of components was estimated by k-means and was set to an initial value of 3, based on visual inspection of the data. Setting the alpha to almost completely transparent means the overlapping datapoints give a limited reflection of the data density. The 1D clustering appears reasonable at 0, 10, 20, 60 and 70 V but without the context of the complete voltage set, clustering at 30 - 50 V appears inaccurate; clearly clustering at higher dimensions is required, so the entirity of the data can be considered. 
 
-The datasets for separate voltages, each containing a number of datapoints proportional to the internsity at each time point, can be combined for modelling in 2D using the same principles for 1D clustering in Scikitlearn shown above. The shape of the data pre-modelling can be shown by combining the 1D datasets, again using transparancy to convey data intensity. More usefully, data intensity can be shown using either a 2D histogram or a contour plot. 
+The datasets for separate voltages, each containing a number of datapoints proportional to the internsity at each time point, can be combined for modelling in 2D using the same principles for 1D clustering in Scikitlearn shown above. The shape of the data pre-modelling can be shown by combining the 1D datasets shown above, again using transparancy to convey data intensity. The intensity can be shown using either a 2D histogram or a contour plot, for comparison with multi-dimensional modelling scenarios in the next section. 
 
 ![](./images/multiple_1D_hists.png)
 
 ![](./images/2Dhist_and_contour.png)
 
 
+The SciKitLearn GMM module contains a number of parameters, two of which required thorough investigation. GMM uses the EM algorithm to find the best model for the data. Essentially, the EM algorithm guesses starting means and variances for a dataset where the means, variances and the number of components (or peaks) means are unknown. The algorithm creates a new dataset with the guessed means and variances, then calculates the probability that the original data came from Gaussian peaks described by the guessed parameters. The contribution of each data point to this total probability score is weighted by each datapoint's distance from the guessed means. This allows the data fit to be improved; if the guessed means were distant from most points, the summed probabiltiy score would be low. The algorithm then alters the guessed parameters so that the assessed probability of all data points is increased. Once the log liklihood of this summed score is not increasing appreciably between guesses (using a pre-determined threshold), then the best data model is said to have been achieved. Clearly, therefore, the method used for taking the initial guess will profoundly impact the final model. 
 
-####up to here
+details
 
 
+The optimal number of initial components can be deduced using BIC, for which there is an inbuilt method in SKL. Explain how it works. This means that a steep drop in BIC will be observed with then number of initial components is optimal.
 
-When performng GMM in SKL there are a number of parameters to be considered, of which two are properly important. Firstly, there is the method for picking the initial number of peaks, or components, that the EM algorithm will start with. Explain the options. Secondly, there is the covariance type. Explain this.
-
-The optimal number of components can be deduced using BIC, for which there is an inbuilt method in SKL. Explain how it works. This means that a steep drop in BIC will be observed with then number of initial components is optimal. 
-For this data I used examined he impacts of both full and diag covariance. Explain why. 
+Covariance type is the second important parameter to consider. Covariance describes whether changes in one variable e.g. voltage, impact on another variable e.g arrival time. Our prior knowledge of these biological measurements tells us that in general as proteins are subject to increasing voltage their unfolded-ness, and hence their arrival time, increases. The extent to which these are correlated, i.e. the shape of the covariance, is unknown as this model must be applicable to proteins with varying structural stabilites. Of the four covariance types provided by SciKitLearn ('full', 'tied', 'spherical' and 'diagonal') only 'full' describes an existing but unknown covariance of x and y. 
+ 
 
 
 Once the data for the entire hIAPP_sliceA dataset is arranged as a 2D histogram, GMM can be applied. I investigated the impact on BIC of choosing 2 - 6 initial components and setting covarience type to both full and diag. For all these inital components, I examined the success of modelling the peak distributions on by plotting colored peak distributions on to the above 'dot-style' histogram, plotting the propsed means and standard deviations on to this data and finally by plotting a reconstruction of the data shown as a contour map, including means.  
