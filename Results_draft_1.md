@@ -46,46 +46,48 @@ The contribution of this second point to the model failure was investigated firs
 
 ![](./images/fig6_fake_data.png)
 
-####UP TO HERE#######
+Pomegranate is a python package that offers a wide range of probabalistic modelling options. It also allows samples to be weighted, which the requirement for the large number of x-axis points required to represent high intensity measurements. Minimum standard deviation can be set in the x and y direction using Pomegranate, meaning the hypothesis that very unequal standard deviations in Figure 4 were the main factor contributing to model failure. 
 
+Using the same visualisation scheme and component numbers as in Figure 4, the hIAPP-sliceA dataset was modelled as Guassian mixtures using Pomegranate. Minimum standard deviations were initially set using an approximate ratio as that observed in Figure 4. After a few attempts, setting minstdX = 0.5 and minstddevY = 8 was found to yield optimal results for this dataset. Pomegranate does not have an inbuilt function for calculating BIC, so this was done manually. 
 
+![](./images/fig7_pom_gmm_full.png)
 
+The results from fitting Gaussians to the data using a defined minimum standard deviation in the Pomegranate module produced very different fits from in Figure 4. A single Gaussian was no longer being explained by high intensity data from a single voltage (Fig. 7b) and the 2D histogram and contour maps of the modelled data (Fig. 7c, d) look much more comparable to those from the original data (Fig. 3), even at greater than 3 components. As the number of components increased and new Gaussians were added, existing one remained in position and credible scenarios of unfolded protein peaks underlying the intensity signal started to materialise (Fig. 7c, d). 
 
-Pomegranate is a python package that offers a wide range of probabalistic modelling and allows samples to be weighted. This latter point circumvents the requirement for the large number of x-axis points required to represent high intensity measurements and the associated long processing times. It is also possible to include a minimum x and y standard deviation in the model using Pomegranate, which makes it possible to test the hypothesis that the unequal standard deviations in Figure X were the main factor contributing to model failure.
+Constraining the minimal standard deviation had showed that the reason for earlier model failures had been the very unequal distrbution of data in the x and y directions, and the Pomegranate module had provided a straightforward means to weight data points according to intensity. However, results in Figure 7 could still not be easily incorporated into software as optimising the minimum standard deviation required extensive manual evaluation. The next step, therefore, was to interpolate the data in both voltage and time dimensions and see whether this allowed Gaussians to be successfully fitted with little or no adjustment of standard deviation settings. Once achieved for the hIAPP_sliceA data, the robustness of this approach could be determined using the three other datasets. 
 
-Using the same visualisation scheme as in Figure X, the same datasets (all voltage from hIAPP_A) using the same range of initial components (2 - 6) are modelled as Guassian mixtures using Pomegranate. Minimum standard deviations were initially set using an approximate ratio as that observed in Figure X and then adjusted accordingly. After a few attempts, setting minstdX = 0.5 and minstddevY = 8 was found to yield optimal results, although the had to be determined experimentally for each collection of input files. Pomegranate does not have an inbuilt function for calculating BIC, so this had to be done manually. 
+There are a variety of python packages for multivariate data interpolation listed at SciPy, of which nearestNDinterpolator, CloughTocher2DInterpolator interp2, RectBivariateSpline, interpn and RegularGridInterpolator were appropriate for grid-like data. 
+Being familiar with the scipy package interp1D, I decided to start invetigations into optimal 2D data interpolation using Interp2D (although since performing these calcultions this package has been deprecated). Interp2D accepts x(arrival time), y(volatge) and z(intensity) data in array-like formats for non-zero intensity values. Parameters were set to cubic interpolation with fill value of 0. Data was smoothed to 200 points in both x and y dminsions, which proved to be a reasonable balance between smoothing and computational time. A density plot of interpolated data (Fig. 8) was very comparabale to the original data (Fig.3) but low intensity, diffuse artefacts were observed at some peripheries of the data grid (Fig. 8). Neither parameter adjustment, allowing y-values to be interpolated below zero nor clipping grid values at zero could remove these artefacts of interpolation. Although they were unlikely to have altered model fit significantly in the current test datasets, this was nonetheless sub-optimal, so the rect bivariate spline interpolation method was attempted next. The data was reshaped into 1D arrays for X and Y data, and one 2D array for intensity values, this time including zero values, and default parameters were used. 
 
-Pom version of Figure X in here.
+![](./images/fig8_interp2D.png)
 
-Although the output model as judged by contour plots could still be improved upon, peaks were clearly no longer being predicted according to voltage group and higher number of initial components was no longer leading to complete failure of the model. The hypothesis that uninterpolated data could not effectively be modelled as Guassian appeared to be correct. The next step was therefore interpolate the data in both voltage and time dimensions. 
+Comparison with all previous density plots (Fig. 3, 7, 8) suggested the interpolation using RBVspline method had been successful (Fig. 9). 
 
-There are a variety of python packages for multivariate data interpolation listed at SciPy, of which nearestNDinterpolator, CloughTocher2DInterpolator interp2D(RectBivariateSpline), interpn and RegularGridInterpolator lookedlooked like they might be appropriate. 
-Explain a bit why e.g. not linear, grid-like.
+![](./images/fig9_RBVinterpolation.png)
 
-Having some familiarity with the scipy package interp1D, I started with interp2D. Interp2D accepts x, y and z data in array-like formats. I performed the interpolation on the human_slice A data using the following code:
+I therefore continued to fit Gaussian Mixtures to the data with Pomegranate. The means and associated errors predicted by the model could be superimposed on a density plot of the interpolated data and the means could be superimposed on the data as recreated. The model initially appeared to be a good fit as the recreated data was visually similar to the original data (Fig. 10). This fit was tested more robustly by plotting the residuals between the original and recreated data, with positive residuals coloured in red and negative ones in blue. 
 
-The success of the interpolation was initially assessed by way of simple visual comparison with a density plot of the uninterpolated data. The density plot was created using the following code:
+![](./images/pomegranate_RBVspline.png)
 
-Although interp2D appeared to adquantely interpolate the data, fuzzy artefacts were observed at the peripheries of the plot grid. 
-Further reading of the documentation prompted the rectate bivariate spline method to be investigated. This required further reshaping of the data into two 1D arrays for X and Y data, and one 2D array for Z data.
+![](./images/RBV_residuals.png)
 
-Comparison with the density plot suggests the interpolation using RBVspline method had successfully interpolated the data. put in figure. I therefore continued to fit the GMM to the interpolated data using pomegranate. The means and associated errors predicted by the model could be superimposed on a density plot of the interpolated data and the data could be recreated according to the model. 
+This plot (Fig. 11a) indicated a good fit between the modelled and original data although, judging by the coloured patches, some small disparities in peak shape remained. I therefore decided to try one more interpolation method, the CloughTocher2DInterpolator, to see if the fit could be improved any further.  
 
-Need to fix up the 90 degree figure problem here. 
+![](./images/Fig11b_CT_residuals.png)
 
-The original interpolated data and recreated data could then be substracted and the residuals plotted. Say what red and blue represents. The disparity between the two suggested that the data interpolation using the RBVspline method hadn't been as succesful as it first seemed. I therefore decided to try another interpolation method, this time the CloughTocher method. 
+#####Explain a bit about this method and why it might be good, why better than the RBVspline method. ##### Or for the discussion. 
 
-Explain a bit about this method and why it might be good, why better than the RBVspline method. 
+The CloughTocher interpolated accepts a 2D array of x,y data and separate 1D array of z data. The data was reshaped accordingly, and default parameters were used. Residuals in Figure 11b showed a noticeable improvement compared to Figure 11a. Until this point, all method development had been done on data from the hIAPP sliceA dataset. Having established CloughTocher2DOnterpolator as the preferred interpolation method and Pomegrate as the preferred GM modelling module, I tested their performance on the three remaining datasets, hIAPP_sliceB, rIAPP_sliceA and rIAPP_sliceB. For each dataset I plotted interpolated data with estimated gaussian means and variances, data recreated using the modelled gaussian means and variances, and the residuals plus the RMSD between original and modelled data. 
+ 
+####make mega figure#####
 
-The CloughTocher interpolated accepts data in .... format. The data was reshaped and interpolated using the following code.
+The method appeared highly satifactory in modelling data from all test datasets, as evidenced by the plots and low RMSD between input and modelled data. Having established a plausible method which could run reasonably quickly using future software, the next challenge was to consider what parameters it might take and which graphical outputs would be most useful. A very useful outcome of the interpolation was that Pomegranate could be implemented without having to specify a minimum standard deviation for any of the datasets tested, so standard deviation no longer needed to be considered as a parameter. For the majority of the Pomegranate modelling, however, I had been visually inspecting graphical output to estimate the optimal number of components and adjusting this on a trial and error basis, which was obviously not a prcatical approach when desiging software. 
 
-As with the RBVspline method, the means and errors were plotted on the interpolated density plot and the residuals of the interpolated data and modelled data were plotted. This time the resiudals appeared much lower, suggesting a considerably better fit. In all three interpolations, 100 data points had been interpolated on the X and Y axes (nsmooth = 100). I therefore settled on the CloughTocher interpolated as the interpolation method of choice. Using an nsmooth of 200 reduced the residuals yet further without coputational time being disporoptionately long. 
+I therefore implemented a method for automating measurement of the BIC and RMSD between original and modelled data for each dataset, on which software users could base their choice of component number (assuming a limit of 10 components).
 
-Until this point, all method development had been done on data from hIAPP sliceA. Now that a preliminary method had been devleope involding CloughTocher interpolation and Pomegranate, this method had to be tested on hIAPP slice B, rIAPPsliceA and rIAPP sliceB. 
+#############################UP TO HERE#########################
 
-Put in figures
-
-The method appeared highly satifactory in modelling data from all test datasets, as evidenced by the low residuals between input and modelled data. Therefore the next step was to automate optimisation of the number of starting components, quantification of model fit, retrieval of means and variance and quantification of protein unfolding, such that the method could be usefully integrated into some future analytical cIMMS software. 
+Therefore the next step was to automate optimisation of the number of starting components, quantification of model fit, retrieval of means and variance and quantification of protein unfolding, such that the method could be usefully integrated into some future analytical cIMMS software. 
 
 BIC is **** and therefore will show an appreciable decrease when the optimal number of starting component is chosen. I therefore plotted the change in gradient between BICs caculated from between 2 and 10 components. I also plotted RMSD vs n starting components, to check that this showed a similarly sharp decrease. 
 
