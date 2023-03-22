@@ -61,31 +61,37 @@ Being familiar with the scipy package interp1D, I decided to start invetigations
 
 ![](./images/fig8_interp2D.png)
 
-Comparison with all previous density plots (Fig. 3, 7, 8) suggested the interpolation using RBVspline method had been successful (Fig. 9). 
+Comparison with all previous density plots (Fig. 3, 7, 8) suggested the interpolation using RBVspline method had been successful (Fig. 9). I therefore continued to fit Gaussian Mixtures to the data with Pomegranate. The means and associated errors predicted by the model could be superimposed on a density plot of the interpolated data and the means could be superimposed on the data as recreated. The model initially appeared to be a good fit as the recreated data was visually similar to the original data (Fig. 10). This fit was tested more robustly by plotting the residuals between the original and recreated data, with positive residuals coloured in red and negative ones in blue. 
 
-![](./images/fig9_RBVinterpolation.png)
 
-I therefore continued to fit Gaussian Mixtures to the data with Pomegranate. The means and associated errors predicted by the model could be superimposed on a density plot of the interpolated data and the means could be superimposed on the data as recreated. The model initially appeared to be a good fit as the recreated data was visually similar to the original data (Fig. 10). This fit was tested more robustly by plotting the residuals between the original and recreated data, with positive residuals coloured in red and negative ones in blue. 
+![](./images/RB_GMM_HA.png) #swap this for human when you have it
 
-![](./images/pomegranate_RBVspline.png)
+This plot (Fig. 11a) indicated a reasonable fit between the modelled and original data although, judging by the coloured patches, some small disparities in peak shape remained. I therefore decided to try one more interpolation method, the CloughTocher2DInterpolator, to see if the fit could be improved any further.  
 
-![](./images/RBV_residuals.png)
+#####Explain a bit about this method and why it might be good, why better than the RBVspline method. ##### Maybe for the discussion. 
 
-This plot (Fig. 11a) indicated a good fit between the modelled and original data although, judging by the coloured patches, some small disparities in peak shape remained. I therefore decided to try one more interpolation method, the CloughTocher2DInterpolator, to see if the fit could be improved any further.  
+The CloughTocher interpolated accepts a 2D array of x,y data and separate 1D array of z data. The data was reshaped accordingly, and default parameters were used. Residuals in Figure 11b showed a small but noticeable improvement compared to Figure 11a (RMSD x vs x). 
 
-![](./images/Fig11b_CT_residuals.png)
+![](./images/CT_GMM_HA.png)
 
-#####Explain a bit about this method and why it might be good, why better than the RBVspline method. ##### Or for the discussion. 
+Up until this point I had been developing the method exclusively on the Human IAPP sliceA dataset. As the improvement in fit using the two different interpolation methods was only marginal, I tested the performance on the two methods on the three remaining datasets, hIAPP_sliceB, rIAPP_sliceA and rIAPP_sliceB. 
 
-The CloughTocher interpolated accepts a 2D array of x,y data and separate 1D array of z data. The data was reshaped accordingly, and default parameters were used. Residuals in Figure 11b showed a noticeable improvement compared to Figure 11a. Until this point, all method development had been done on data from the hIAPP sliceA dataset. Having established CloughTocher2DOnterpolator as the preferred interpolation method and Pomegrate as the preferred GM modelling module, I tested their performance on the three remaining datasets, hIAPP_sliceB, rIAPP_sliceA and rIAPP_sliceB. For each dataset I plotted interpolated data with estimated gaussian means and variances, data recreated using the modelled gaussian means and variances, and the residuals plus the RMSD between original and modelled data. 
- 
-####make mega figure 12. #####
+![](./images/RB_GMM_HB.png)
+![](./images/CT_GMM_HB.png)
 
-The method appeared highly satifactory in modelling data from all test datasets, as evidenced by the plots and low RMSD between input and modelled data. Having established a plausible method which could run reasonably quickly using future software, the next challenge was to consider what parameters it might take and which graphical outputs would be most useful. A very useful outcome of the interpolation was that Pomegranate could be implemented without having to specify a minimum standard deviation for any of the datasets tested, so standard deviation no longer needed to be considered as a parameter. For the majority of the Pomegranate modelling, however, I had been visually inspecting graphical output to estimate the optimal number of components and adjusting this on a trial and error basis, which was obviously not a prcatical approach when desiging software. 
+![](./images/RB_GMM_RA.png)
+![](./images/CT_GMM_RA.png)
+
+![](./images/RB_GMM_RB.png)
+![](./images/CT_GMM_RB.png)
+
+The CloughTocher interpolater consistently performed about twice as well as the RectBivariate Spline interpolation method, judging by RMSD of original vs. modelled data (Table 1), so this became the method of choice. Having established a plausible method which could run reasonably quickly using future software, the next challenge was to consider what parameters it might take and which graphical outputs would be most useful. A very useful outcome of the interpolation was that Pomegranate could be implemented without having to specify a minimum standard deviation for any of the datasets tested, so standard deviation no longer needed to be considered as a parameter. For the majority of the Pomegranate modelling, however, I had been visually inspecting graphical output to estimate the optimal number of components and adjusting this on a trial and error basis, which was obviously not a prcatical approach when desiging software. 
 
 I therefore implemented a method for automating measurement of the BIC and RMSD between original and modelled data for each dataset, on which software users could base their choice of component number (assuming a limit of 10 components). As mentioned, Pomegranate does not have an inbuilt method for calculating BIC. BIC has been introduced briefly already but must be now be expained in more detailed. BIC is defined as: BIC = k ln(n) - 2 ln(L) where L is "the maximized value of the likelihood function of the model", or the probability of the data having been generated by the best fitting model, k is the number of components and n is the number of data points being fitted in the model. In log space the goodness of model fit is therefore directly proportional to the number of components and size of the dataset. As L increases, so the value of BIC decreases unless k is large - hence how the BIC value is penalised by a large number of components. This is calculated in line XXXX: bic = float(df * np.log(len(smoothxycoords)) - 2.0 * lp). The relative decrease in BIC was emphasised by plotting the change in gradient between n components, rather than the BIC itself (Fig. 13). 
 
-###Fig. 13####
+![](./images/bic_getter_HB.png)
+![](./images/bic_getter_RA.png)
+![](./images/bic_getter_RB.png)
 
 Results in Figure 13 show general, but not completely consistent, agreement between BIC and RMSD. A scenario in which choice of components was fully automated might involve, for example, calculating the number of compontents at which the previous gradient was less than half the current one. However, given the sometimes inconsistent results, the safest policy may be to present the user with all the data in Figure 13 for them to decide the optimal number of components.  
 
@@ -93,28 +99,12 @@ An essential part of a functional user-interface is data visualistion. I thought
 
 Density plots, means and standard devatiations have already been explored. For visualisation of profiles over voltage and time, data was 'sliced' along the grid axes, as in Figure 14. 
 
-###Fig. 14###
+![](./images/slices_HA.png)
 
 
-########up to here#####
+Finlly, I decided to present an overall view of protein stability by comparing the proportion of the initil protein peak to all unfolding/unfolded peaks as the voltage was increased. This required that an initial parent peak, present at 0V, was correctly defined and that the area under this peak was measured separately from all the child peaks for all the voltages. Conversely, the sum area under all the child peaks had to be measured at all volatges. Although conceptually straightforward, robust identification of the parent peak is critical in this approach. An obvious first step would be to define the parent peak as the first along the Y(Volts)-axis and X(time)-axis. Although this worked fine in datasets where the first peak was the most intense peak, such as rIAPP_sliceA, in hIAPP_sliceA and rIAPP_sliceB low-intensity peaks were detected at a lower voltage and/or time than the parent peak. The more complex the starting sample, the more plausible such a scenario becomes. Therefore the code was adapted to check whether the first peak along the Y-axis was the most intense by comparing positions in np.argsort lists of mean intensities and mean y-coordinates. When this was not the case, the code then asks whether the y-coordinates for the highest intensity mean is less than 12 y-unit away from the first peak. If so, this more intense peak is accepted as the parent peak. The threshold of 12 y-units is based on the voltage required to produce a substantial second peak in these four test datasets. It is difficult to define a more sophisticated threshold based on only four test datasets, although one can be envisaged which uses both X and Y coordinates based on a radius around the parent peak from e.g. 20 datasets. In the current implemntation of the code, if the most intense peak is more than 12 y-units away from the first peak on the Y-axis (as is the case in hIAPP_sliceB), this peak is still chosen as the parent peak but a warning is triggered advising the user to examine the results manually. Again, with more test datasets, this trigger-threshold could be much better defined.   
 
-The final result set to present was total unfolding of each protein slice from start to finish time at each of the different voltages. This was not quite as straighforward as it required the starting, or parent, peak had to be defined. This could then be compared to the sum of all the child peaks. The parent peak was initially defined as the modelled mean at the smallest y-axis (voltage) value. However, it became apparent in (rat slice B?) that the first peak along the y-axis might not be the parent peak. The parent peak cannot instead be defined as the most intense peak as some child peaks could be more intense. 
-
-The following code defines the parent peak under a variety of scenarios. Firslty, and most simply, the code assess whether the list position of the y-value for the most intense peak is the same list position of the smallest y-value for the means i.e. if the first mean is also the most intense peak they both should be the first items in np.argsort lists of intensity y-coords and mean y-coords. 
-
-Show relevant code. 
-
-If this is not the case, the code then asks whether the y-value for the maximum intensity peak is less than 15 y-units (i.e. Volts) from the y-value of the first mean. If so, then this peak is taken as the reference peak index. This difference of 15 y-units is based on the smallest difference between a parent peak and the child peak with the next highest y-value in the test datasets on which this study is based. As more test datasets are accumulated, this number can be refined. 
-
-Next few lines of code. 
-
-This effect of this can be demonstrated with the XXXX dataset, where the parent peak is the second peak along the y-axis. Figure X shows datasets XXXX and YYYY. In XXXX the first peak along the y-axis is the most intense and in YYYY the second peak is. Without the 15 y-unit caveat (Fig. Xa), the incorrect parent peak has been chosen for YYYY. Applying the above code chunk corrects this (Fig. Xb). 
-
-
-If the most intense peak is further away than 15 y-units, this suggests something unusual about the dataset in question, so although the same peak as in Fig. Xb is take as the reference index, the data is flagged with a warning message. 
-
-Complete code chunk. 
+![](./images/parent_child_HA.png)
 
 In summary, these results describe the process by which a Gaussian mixture model is fitted to generic cIMMS data than varies in time, voltage and intensity, with a view to the process being implemented via a user-interface. The results summary below shows how the output from such software might appear. 
 
-Fig with all graphs, tabulated meand and bics. 
