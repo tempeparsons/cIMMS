@@ -22,7 +22,7 @@ In the above clustering Gaussian fittings, the number of components was estimate
 
 The principal of 2D Gaussian fitting is similar to 1D fitting, except that covariance i.e. how much a change along one axis affects changes along the other axis, must be carefully considered. The longer a protein is subject to a voltage the more it will unfold. However, for any one data point, and therefore any one Gaussian peak, the variation in voltage is not affected by the variation in arrival time.  
 
-Before applying 2D Gaussian fitting, the overall shape of all test datasets was compared to check the likelihood that the same fitting technique would work reasonably well for all datasets. Rather than using datapoints with high transparacies as before, intensity was better visualised using a 2D histogram (Fig. 3A, B, D, E) and a contour plot (Fig. 3F, G, H, I). Overall, there did not seem to be any differences in dataset shape so large as to consider using different fitting methods, although rat data (Fig. 3D, E) looked slightly less gaussian than human data (Fig.3A, B). It was noteworthy that x and y were not the same length in all datasets. Consequently, the modelling code was tested on the same lengthed datasets (hIAPP_A and _B) before the final method written into functions which could account for such variation. 
+Before applying 2D Gaussian fitting, the overall shape of all test datasets was compared to check the likelihood that the same fitting technique would work reasonably well for all datasets. Rather than using datapoints with high transparacies as before, intensity was better visualised using a 2D histogram (Fig. 3A, B, D, E) and a contour plot (Fig. 3F, G, H, I), with intensities represented by colour. Overall, there did not seem to be any differences in dataset shape so large as to consider using different fitting methods, although rat data (Fig. 3D, E) looked slightly less gaussian than human data (Fig.3A, B). It was noteworthy that x and y were not the same length in all datasets. Consequently, the modelling code was tested on the same lengthed datasets (hIAPP_A and _B) before the final method written into functions which could account for such variation. 
 <br>
 
 ![](./images/Fig3AtoD.png)
@@ -46,7 +46,7 @@ Data for the entire hIAPP_sliceA dataset was arranged as a 2D histogram, as show
 
 ![](./images/Fig4.png)
 
-<strong>Figure 4. 2-dimensional Gaussian mixture modelling of hIAPP_A data using the SciKitLearn GMM module.</strong> Data was prepared as described in Fig. 3A, then subjected to 2D clustering using the sklearn.mixture.GaussianMixture module. Between 2 and 5 starting components were tested, initialised using k-means, with covariance type set to 'full'. Default settings were used for all other paramters. In Fig. 4A Gaussian cluster are not coloured so that the means and standard deviations are easily visualised. Next, datapoints are coloured according their assigned peak (Fig. 4b). The data distribution is better visualised using density plots (Fig. 4C) and contour maps (Fig. 4D). Modelled means are shown in red (Figs. 4C, D) and the BIC associated with each number of starting components is given (Fig. 4A). 
+<strong>Figure 4. 2-dimensional Gaussian mixture modelling of hIAPP_A data using the SciKitLearn GMM module.</strong> Data was prepared as described in Fig. 3A, then subjected to 2D clustering using the sklearn.mixture.GaussianMixture module. Between 2 and 5 components were tested, initialised using k-means, with covariance type set to 'full'. Default settings were used for all other paramters. In Fig. 4A Gaussian cluster are not coloured so that the means and standard deviations are easily visualised. Next, datapoints from the original data are coloured according their assigned Gaussian (Fig. 4b). The data distribution is better visualised using density plots (Fig. 4C) and contour maps (Fig. 4D). Modelled means are shown in red (Figs. 4C, D) and the BIC associated with each components number is given (Fig. 4A). 
 <br>
 <br>
 
@@ -101,7 +101,7 @@ Comparison of the RectBivariateSplie interpolation (Fig. 8B) with the original d
 
 ![](./images/Fig9.png)
 
-<strong>Figure 9. Interpolation of hIAPP_A data using the RectBivariateSpline method from SciPiy.</strong> Figure 9A shows a density plot of the original data. Fitted means and standard deviations are overlayed on data fitted using Pomegrate (Fig. 9B). The original and modelled data were normalised, subtracted and the residuals plotted, using a hot-cool color map to indicate postive-negative values, along with the RMSD value (Fig. 9C). 
+<strong>Figure 9. Interpolation of hIAPP_A data using the RectBivariateSpline method from SciPiy.</strong> Figure 9A shows a density plot of the original data. Fitted means and standard deviations are overlayed on data fitted using Pomegrate (Fig. 9B). The original and modelled data were normalised, subtracted and the residuals plotted, using a hot-cool color map to indicate postive-negative values, along with the RMSD value (Fig. 9C). The optimal number of components was estimated using results from Figure 14. 
 <br>
 <br>
 The residual plot indicated a reasonable fit between the modelled and original data although, judging by the coloured patches, some small disparities in peak shape remained. I therefore decided to try one more interpolation method, the CloughTocher2DInterpolator, to see if the fit could be improved any further.  
@@ -122,21 +122,21 @@ Given that the improvement in fit was not huge, I tested the performance of each
 
 ![](./images/Fig11.png)
 
-<strong>Figure 11. Interpolation of hIAPP_B data using the CloughTocher interpolation method from SciPy.</strong> In all cases, the number of components was optimised using data from Figure 14. 
+<strong>Figure 11. Interpolation of hIAPP_B data using the RectBivariateSpline and CloughTocher interpolation methods from SciPy.</strong> RMSD for each method is in black and green text, respectively. Descriptions for Figs. 11A, B and C are as for Figure 9.
 <br>
 <br>
 <br>
 
 ![](./images/Fig12.png)
 
-<strong>Figure 12. Interpolation of hIAPP_B data using the CloughTocher interpolation method from SciPy.</strong>
+<strong>Figure 12. Interpolation of hIAPP_B data using the CloughTocher interpolation method from SciPy.</strong> RMSD for each method is in black and green text, respectively.  Descriptions for Figs. 12A, B and C are as for Figure 9.
 <br>
 <br>
 <br>
 
 ![](./images/Fig13.png)
 
-<strong>Figures 11. Interpolation of hIAPP_B data using the CloughTocher interpolation method from SciPy.</strong>
+<strong>Figures 11. Interpolation of hIAPP_B data using the CloughTocher interpolation method from SciPy.</strong> RMSD for each method is in black and green text, respectively.  Descriptions for Figs. 13A, B and C are as for Figure 9.
 <br>
 <br>
 <br>
@@ -174,13 +174,14 @@ Although this worked fine in datasets where the first peak was the most intense 
 
 ![](./images/Fig19.png)
 <strong>Figure 17. Identification of parent and child peaks in the rIAPP_B dataset where a less intense peak, close to the genuine parent peak, occurs first in the y-direction.</strong> Fig. 17A, B and C ddescriptions are as for Fig. 16A, B and C. 
+<br>
+<br>
 
 In the current implemntation of the code, if the most intense peak is more than 12 y-units away from the first peak on the Y-axis (as is the case in hIAPP_sliceB), this peak is still chosen as the parent peak but a warning is triggered advising the user to examine the results manually. Again, with more test datasets, this trigger-threshold could be much better defined. 
 
 ![](./images/Fig17.png)
 <strong>Figure 18. Identification of parent and child peaks in the hIAPP_B dataset where identification of the parent peak is not straightforward, so a warning message is triggered.</strong> Fig. 18A, B and C descriptions are as for Fig. 16A, B and C. 
-
-
-
+<br>
+<br>
 Taken together, these results show that Gaussian Mixture Modelling provides a mechanism for deconvoluting the signal from circular ion mobility mass spectrometry, although the large data range means than modules enabling weighting of datapints, such as Pomegranate, are more sutabel than more commonly used modeules such as SciKitLearn. Sucessfull Gaussian modelling is subject to data interpolation inbetween the selected time points and voltages, otherwise the data is not continuous and cannnot be modelled using this method. As evidenced by these results, the interpolation method used can have an appeciable effect on how well Gaussians can be fitted to the data. These results also start to show how data input, processing and results output could be incorporated into software for modelling circular ion mobility data. 
 
