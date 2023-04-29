@@ -7,7 +7,7 @@ Clustering methods, including GMM, can be applied to one, two or higher dimensio
 
 ![](./images/Fig1.png)
 
-<font size="2"><strong>Figure 1. 1-dimensional Gaussian mixture modelling of hIAPP_A data.</strong> Data from each voltage was reduced in dimensionality by expressing intensity at the number of points at an arrival time, then subjected to 1D clustering using the sklearn.mixture.GaussianMixture module. The following parameters were applied to all voltages: n_components=3, max_iter=100, init_params='kmeans', covariance_type='full', random_state=0. Default settings were used for all other paramters and data points were coloured by whichever component the original data point was fitted to. The relationship between fitted peaks and the total arrival time spectra is shown by superimposing line plots of arrival time and intensity for each voltage. Note the high intensity range on the y-axes of subplots. Note also that colors do not necessarily match a particular component. </font>
+<font size="1"><strong>Figure 1. 1-dimensional Gaussian mixture modelling of hIAPP_A data.</strong> Data from each voltage was reduced in dimensionality by expressing intensity at the number of points at an arrival time, then subjected to 1D clustering using the sklearn.mixture.GaussianMixture module. The following parameters were applied to all voltages: n_components=3, max_iter=100, init_params='kmeans', covariance_type='full', random_state=0. Default settings were used for all other paramters and data points were coloured by whichever component the original data point was fitted to. The relationship between fitted peaks and the total arrival time spectra is shown by superimposing line plots of arrival time and intensity for each voltage. Note the high intensity range on the y-axes of subplots. Note also that colors do not necessarily match a particular component. </font>
 <br>
 <br>
 In the above clustering Gaussian fittings, the number of components was estimated by k-means and was set to an initial value of 3 for all voltages. For each voltage in Figure one, the components to which the 1-dimensional data points at the bottom have been assigned look plausibel given the line plots showing intensity. However, after 20 V the base positions of the components along the x-axis becomes inconsistent. Obviously, the apex of some components will be first detected in a different voltage from the dataset containing their apex. In order to find the real shape of a component, it must be considered in the context of all volatges. Figure 1 therefore shows that these datasets are not appropriate for fitting in one dimension.
@@ -20,7 +20,7 @@ Before applying 2D Gaussian fitting, the overall shape of all test datasets was 
 
 ![](./images/Fig2EtoH.png)
 
-<font size="2"><strong>Figure 3. Visualising the shapes of a dataset using 2d histograms and contour maps.</strong> 2D arrays were generated with one layer containing non-zero arrival times proportional to the intensity and another with corresponding voltages. For each dataset this was plotted as a 2D histogram using the numpy.histogram2d function and coloured from highest intensity (yellow) to lowest (black) as follows: hIAPP_A; 2A, hIAPP_B; 2B, rIAPP_A; 2C, rIAPP_B; 2D. Equivalent arrays were generated for plotting contour maps (Figs. 2E - H). </font>
+<font size="1"><strong>Figure 3. Visualising the shapes of a dataset using 2d histograms and contour maps.</strong> 2D arrays were generated with one layer containing non-zero arrival times proportional to the intensity and another with corresponding voltages. For each dataset this was plotted as a 2D histogram using the numpy.histogram2d function and coloured from highest intensity (yellow) to lowest (black) as follows: hIAPP_A; 2A, hIAPP_B; 2B, rIAPP_A; 2C, rIAPP_B; 2D. Equivalent arrays were generated for plotting contour maps (Figs. 2E - H). </font>
 <br>
 <br>
 
@@ -36,7 +36,7 @@ Data was arranged as a 2D numpy array, as descried for Figure 2, and 2D GMM was 
 
 ![](./images/Fig3.png)
 
-<font size="2"><strong>Figure 3. 2-dimensional Gaussian mixture modelling of hIAPP_A data using the SciKitLearn GMM module.</strong> Between 2 and 5 components were tested, initialised using k-means, with covariance type set to 'diag'. Default settings were used for all other paramters. In Fig. 3A Gaussian cluster are not coloured so that the means and standard deviations are easily visualised. Datapoints from the original data are coloured according their assigned Gaussian component(3B). Fitted data distribution is visualised using density plots (3C) and contour maps (3D). Modelled means are shown in red (3C, D) and the BIC associated with each components number is given in the plot titles (3A). </font>
+<font size="1"><strong>Figure 3. 2-dimensional Gaussian mixture modelling of hIAPP_A data using the SciKitLearn GMM module.</strong> Between 2 and 5 components were tested, initialised using k-means, with covariance type set to 'diag'. Default settings were used for all other paramters. In Fig. 3A Gaussian cluster are not coloured so that the means and standard deviations are easily visualised. Datapoints from the original data are coloured according their assigned Gaussian component(3B). Fitted data distribution is visualised using density plots (3C) and contour maps (3D). Modelled means are shown in red (3C, D) and the BIC associated with each components number is given in the plot titles (3A). </font>
 <br>
 <br>
 A number of important interpretations were made from this data which directed the subsequent directions of analysis. Firstly, despite the intensity values being divided by 100, this approach was impractically slow owing to the large number of points required to reprepsent the highest intensity readings. 
@@ -46,7 +46,7 @@ Secondly, modelling in 2D did not produce even moderately comparable clusters (F
 
 ![](./images/Fig4.png)
 
-<font size="2"><strong>Figure 4. Impact of parameter adjustment on fitting Gaussian peaks to hIAPP_A data, using the SciKitLearn GMM module.</strong> Gaussian mixtures were modelled using data prepared as for Fig.3 but, using a 3 starting components and a set random_state, all possible initialisation methods and covariance types were investigated. Only results for covariance type 'full' and 'diag' are shown here. Parameters are detailed in subplot titles. Clusters are coloured using matplotlib colormap 'viridis' as in Figure 1. </font>
+<font size="1"><strong>Figure 4. Impact of parameter adjustment on fitting Gaussian peaks to hIAPP_A data, using the SciKitLearn GMM module.</strong> Gaussian mixtures were modelled using data prepared as for Fig.3 but, using a 3 starting components and a set random_state, all possible initialisation methods and covariance types were investigated. Only results for covariance type 'full' and 'diag' are shown here. Parameters are detailed in subplot titles. Clusters are coloured using matplotlib colormap 'viridis' as in Figure 1. </font>
 <br>
 <br>
 
@@ -57,7 +57,7 @@ The contribution of intensity range to the model failure was investigated first,
 
 ![](./images/Fig5.png)
 
-<font size="2"><strong>Figure 5. 2-dimensional Gaussian mixture modelling of semi-artifical hIAPP_A data using the SKL GMM module.</strong> Source data differed from that shown in Fig. 3 in that files containing the most intense peaks (10 Volts) least intense peaks (60 and 70 Volts) had been artificially lowered and raised, respectively. Otherwise all other parameters and analyses were set as in Figure 3. </font>
+<font size="1"><strong>Figure 5. 2-dimensional Gaussian mixture modelling of semi-artifical hIAPP_A data using the SKL GMM module.</strong> Source data differed from that shown in Fig. 3 in that files containing the most intense peaks (10 Volts) least intense peaks (60 and 70 Volts) had been artificially lowered and raised, respectively. Otherwise all other parameters and analyses were set as in Figure 3. </font>
 <br>
 <br>
 Of immediate importance, however, was the first problem that the number of datapoints representing the greatest intensities meant datasets were enormous and investigating multiple components was becoming unfeasibley slow. The need to represent intensity this way was eliminted by using a different modelling library. Pomegranate is a python package that offers a wide range of probabalistic modelling (pomegranate.readthedocs.io/en/latest/). It also allows data points to be weighted, making it easier to deal with high intensity measurements. Required data inputs are a grid of coordinates for each datapoint in one array and another array containing the weighting of each point. The MultivariateGaussianDistribution function from Pomegranate's GeneralMixtureModel module uses 'full' convariance by default. This is converted to independent x and y, by defining the minimum standard x and y deviation as classes and using these in place of MultivariateGaussianDistribution. The minimum standard deviation in these classes can then be changed - thereby allowing the hypothesis to be tested that very unequal standard deviations in Figure 3 were the principal factor behind model failure.
@@ -66,7 +66,7 @@ Using the same visualisation scheme and component numbers as in Figures 3 and 5,
 
 ![](./images/Fig6.png)
 
-<font size="2"><strong>Figure 6. 2-dimensional Gaussian mixture modelling of hIAPP_A data using the Pomegranate GeneralMixtureModel module for 2 - 5 components.</strong> Subplot descriptions are as for Figures 3 and 5. Minimum standard deviations for x and y were set to 0.5 and 8, respectively. </font>
+<font size="1"><strong>Figure 6. 2-dimensional Gaussian mixture modelling of hIAPP_A data using the Pomegranate GeneralMixtureModel module for 2 - 5 components.</strong> Subplot descriptions are as for Figures 3 and 5. Minimum standard deviations for x and y were set to 0.5 and 8, respectively. </font>
 <br>
 <br>
 Although the model fit was greatly improved, manual evaluation of minumum standard deviations for each dataset was impractical, especilly considering software design. The next step was to interpolate the data in both voltage and time dimensions and see whether this allowed successful fitting with little or no adjustment of standard deviation settings. 
@@ -75,14 +75,14 @@ There are a variety of python packages for multivariate data interpolation liste
 
 ![](./images/Fig7.png)
 
-<font size="2"><strong>Figure 7. Interpolation of arrival time, voltage and intensity data in the hIAPP_A dataset using Interp2D and RectBivariateSpline interpolation.</strong> In Figure 7A, data from each dimension was formatted as an array and interpolated using Interp2D with the following parameters altered from default: kind = 'cubic', fill value = 0.0. In Figure 7B data was interpolated using the RectBivariateSpline function with parameters were set as: bbox=[None, None, None, None], kx=3, ky=3, s=0. All other parameters ere left as default. For both methods 200 data points were interpolated between 55 and 80 ms and between -10 and 70V in the time and voltage dimensions.</font>
+<font size="1"><strong>Figure 7. Interpolation of arrival time, voltage and intensity data in the hIAPP_A dataset using Interp2D and RectBivariateSpline interpolation.</strong> In Figure 7A, data from each dimension was formatted as an array and interpolated using Interp2D with the following parameters altered from default: kind = 'cubic', fill value = 0.0. In Figure 7B data was interpolated using the RectBivariateSpline function with parameters were set as: bbox=[None, None, None, None], kx=3, ky=3, s=0. All other parameters ere left as default. For both methods 200 data points were interpolated between 55 and 80 ms and between -10 and 70V in the time and voltage dimensions.</font>
 <br>
 <br>
 Comparison of the RectBivariateSplie interpolation (Fig. 7B) with the original data (Fig. 3I, M) suggested the interpolation using RBVspline method had been successful. I therefore continued to fit Gaussian Mixtures to the data with Pomegranate, visualising the original data (Fig. 8A), modelled data (Fig. 8B), means and standard deviations as in previous figures. This fit was tested more robustly by plotting the residuals between the original and recreated data, with positive residuals coloured in red and negative ones in blue (Fig. 8C). 
 
 ![](./images/Fig8.png)
 
-<font size="2"><strong>Figure 8. Interpolation of hIAPP_A data using the RectBivariateSpline method from SciPiy.</strong> Figure 8A shows a density plot of the original data. Fitted means and standard deviations are overlayed on data fitted using Pomegrate (Fig. 8B). The original and modelled data were normalised, subtracted and the residuals plotted, using a hot-cool color map to indicate postive-negative values, along with the RMSD value (Fig. 8C). The optimal number of components was estimated using results from Figure 13. </font>
+<font size="1"><strong>Figure 8. Interpolation of hIAPP_A data using the RectBivariateSpline method from SciPiy.</strong> Figure 8A shows a density plot of the original data. Fitted means and standard deviations are overlayed on data fitted using Pomegrate (Fig. 8B). The original and modelled data were normalised, subtracted and the residuals plotted, using a hot-cool color map to indicate postive-negative values, along with the RMSD value (Fig. 8C). The optimal number of components was estimated using results from Figure 13. </font>
 <br>
 <br>
 The residual plot indicated a reasonable fit between the modelled and original data although clear disparities in peak shape remained (Fig. 8C). I therefore decided to try one more interpolation method available from SciPy, the CloughTocher2DInterpolator, to see if the fit could be improved any further.  The CloughTocher interpolated accepts a 2D array of x,y data and separate 1D array of z data. The data was reshaped accordingly, and default parameters were used. Residuals in Figure 9C showed a small but noticeable improvement compared to Figure 10C (RMSD 0.0000202 vs x0.0000188). Given that the improvement in fit was not huge, I tested the performance of each interpolation method on the three remaining datasets, hIAPP_sliceB (Fig. 10), rIAPP_sliceA (Fig. 11) and rIAPP_sliceB (Fig. 12). 
@@ -90,25 +90,25 @@ The residual plot indicated a reasonable fit between the modelled and original d
 
 ![](./images/Fig9.png)
 
-<font size="2"><strong>Figure 9. Interpolation of hIAPP_A data using the CloughTocher interpolation method from SciPy.</strong> Figures 9A, B and C are as for Figure 8, excepting the interpolation method. </font>
+<font size="1"><strong>Figure 9. Interpolation of hIAPP_A data using the CloughTocher interpolation method from SciPy.</strong> Figures 9A, B and C are as for Figure 8, excepting the interpolation method. </font>
 <br>
 <br>
 
 ![](./images/Fig10.png)
 
-<font size="2"><strong>Figure 10. Interpolation of hIAPP_B data using the RectBivariateSpline and CloughTocher interpolation methods from SciPy.</strong> RMSD for each method is in black and green text, respectively. Descriptions for Figs. 11A, B and C are as for Figure 9.</font>
+<font size="1"><strong>Figure 10. Interpolation of hIAPP_B data using the RectBivariateSpline and CloughTocher interpolation methods from SciPy.</strong> RMSD for each method is in black and green text, respectively. Descriptions for Figs. 11A, B and C are as for Figure 9.</font>
 <br>
 <br>
 
 ![](./images/Fig11.png)
 
-<font size="2"><strong>Figure 11. Interpolation of hIAPP_B data using the CloughTocher interpolation method from SciPy.</strong> RMSD for each method is in black and green text, respectively.  Descriptions for Figs. 12A, B and C are as for Figure 9.</font>
+<font size="1"><strong>Figure 11. Interpolation of hIAPP_B data using the CloughTocher interpolation method from SciPy.</strong> RMSD for each method is in black and green text, respectively.  Descriptions for Figs. 12A, B and C are as for Figure 9.</font>
 <br>
 <br>
 
 ![](./images/Fig12.png)
 
-<font size="2"><strong>Figures 12. Interpolation of hIAPP_B data using the CloughTocher interpolation method from SciPy.</strong> RMSD for each method is in black and green text, respectively.  Descriptions for Figs. 12A, B and C are as for Figure 9.</font>
+<font size="1"><strong>Figures 12. Interpolation of hIAPP_B data using the CloughTocher interpolation method from SciPy.</strong> RMSD for each method is in black and green text, respectively.  Descriptions for Figs. 12A, B and C are as for Figure 9.</font>
 <br>
 <br>
 
@@ -118,7 +118,7 @@ I therefore implemented a method for automating measurement of the BIC and RMSD 
 
 ![](./images/Fig14.png)
 
-<font size="2"><strong>Figure 13. Assessment of optimal number of components for each of the four test datasets</strong> BIC (13A) and RMSD (13B) between original and modelled data was calculated for 2 - 10 components for each of the test datasets. Figure 13 shows results for hIAPP_A. Other datasets can be plotted using functions in the Methods section. For all plots, error bars show standard error of the mean for 5 repeats.</font>
+<font size="1"><strong>Figure 13. Assessment of optimal number of components for each of the four test datasets</strong> BIC (13A) and RMSD (13B) between original and modelled data was calculated for 2 - 10 components for each of the test datasets. Figure 13 shows results for hIAPP_A. Other datasets can be plotted using functions in the Methods section. For all plots, error bars show standard error of the mean for 5 repeats.</font>
 <br>
 <br>
 Results showed general, if not completely consistent, agreement between BIC (Fig. 13A) and RMSD (Fig. 13B). A scenario in which choice of components was fully automated might involve, for example, calculating the number of compontents at which the previous gradient was less than half the current one. However, given the sometimes inconsistent results, the safest policy may be to present the user with all the data in Figure 13 for them to decide the optimal number of components.  
@@ -129,7 +129,7 @@ Intensity profiles were visualised over voltage and time by 'slicing' data acros
 
 ![](./images/Fig15.png)
 
-<font size="2"><strong>Figure 14. Slices horizontally (Fig. 14A) or vertically (Fig. 14B) across the data grid of the CloughTocher-interpolated hIAPP_A dataset prior to Gaussian fitting.</strong> Fig. 14A shows horizontal cross sections from the start to halfway up the Y-axis of the density plot shown in Fig. 9. Each line represents intensities at a cross section in increments of 10. Fig. 14B shows vertical cross sections of the data grid along the X-axis. Data was sectioned over columns equivalent to 55 to 67 mins in Fig. 10, in increments of 5.</font>
+<font size="1"><strong>Figure 14. Slices horizontally (Fig. 14A) or vertically (Fig. 14B) across the data grid of the CloughTocher-interpolated hIAPP_A dataset prior to Gaussian fitting.</strong> Fig. 14A shows horizontal cross sections from the start to halfway up the Y-axis of the density plot shown in Fig. 9. Each line represents intensities at a cross section in increments of 10. Fig. 14B shows vertical cross sections of the data grid along the X-axis. Data was sectioned over columns equivalent to 55 to 67 mins in Fig. 10, in increments of 5.</font>
 <br>
 <br>  
 
@@ -138,19 +138,19 @@ Finlly, I decided to present an overall view of protein stability by comparing t
 ![](./images/Fig16.png)
 ![](./images/Fig18.png)
 
-<font size="2"><strong>Figure 15. Density and line plots showing the intensities of the parent peak compared to child peaks.</strong>. This figure shows plots for hIAPP_A and rIAPP_A, in which identification fo the parent peak was straightforward as it was both the first and the most intense peak in the y-direction. All Gaussians identified in the fitted data and their means are shown in 15A, E. The child (15B, F) and parent (15C, G) peaks are visualised separately. In the absence of the parent peak, the color map is re-scaled to the intensity of the child peaks (15B, F). Finally, the relative intensities of parent and child peaks are shown (15D, H). </font>
+<font size="1"><strong>Figure 15. Density and line plots showing the intensities of the parent peak compared to child peaks.</strong>. This figure shows plots for hIAPP_A and rIAPP_A, in which identification fo the parent peak was straightforward as it was both the first and the most intense peak in the y-direction. All Gaussians identified in the fitted data and their means are shown in 15A, E. The child (15B, F) and parent (15C, G) peaks are visualised separately. In the absence of the parent peak, the color map is re-scaled to the intensity of the child peaks (15B, F). Finally, the relative intensities of parent and child peaks are shown (15D, H). </font>
 <br>
 <br>
 The more complex the starting sample, the more plausible such a scenario becomes. Therefore the code was adapted to check whether the first peak along the Y-axis was the most intense by comparing positions in np.argsort lists of mean intensities and mean y-coordinates. When this was not the case, the code then asked whether the y-coordinates for the highest intensity mean was less than 12 y-unit away from the first peak. If so, this more intense peak is accepted as the parent peak. The threshold of 12 y-units is based on the voltage required to produce a substantial second peak in these four test datasets. It is difficult to define a more sophisticated threshold based on only four test datasets, although one can be envisaged which uses both X and Y coordinates based on a radius around the parent peak from e.g. 20 datasets. 
 
 ![](./images/Fig19.png)
-<font size="2"><strong>Figure 16. Identification of parent and child peaks in the rIAPP_B dataset where a less intense peak, close to the genuine parent peak, occurs first in the y-direction.</strong> Fig. 16A, B and C ddescriptions are as for Fig. 15A, B and C. </font>
+<font size="1"><strong>Figure 16. Identification of parent and child peaks in the rIAPP_B dataset where a less intense peak, close to the genuine parent peak, occurs first in the y-direction.</strong> Fig. 16A, B and C ddescriptions are as for Fig. 15A, B and C. </font>
 <br>
 <br>
 In the current version of the code, if the most intense peak is more than 12 y-units away from the first peak on the Y-axis, as was the case in hIAPP_sliceB, this peak is still chosen as the parent peak but a warning is triggered advising the user to examine the results manually. Again, with more test datasets, this trigger-threshold could be much better defined. 
 
 ![](./images/Fig17.png)
-<font size="2"><strong>Figure 17. Identification of parent and child peaks in the hIAPP_B dataset where identification of the parent peak is not straightforward, so a warning message is triggered.</strong> Fig. 17A, B and C descriptions are as for Fig. 15A, B and C. </font>
+<font size="1"><strong>Figure 17. Identification of parent and child peaks in the hIAPP_B dataset where identification of the parent peak is not straightforward, so a warning message is triggered.</strong> Fig. 17A, B and C descriptions are as for Fig. 15A, B and C. </font>
 <br>
 <br>
 Taken together, these results show that Gaussian Mixture Modelling provides a mechanism for deconvoluting the signal from circular ion mobility mass spectrometry. The large data range means than modules enabling weighting of datapints, such as Pomegranate, are more suitable than more commonly used modeules such as SciKitLearn. Sucessfull Gaussian modelling is subject to data interpolation inbetween the selected time points and voltages, otherwise the data is not continuous and cannnot be modelled using this method. As evidenced by these results, the interpolation method used can have an appeciable effect on how well Gaussians can be fitted to the data. These results also start to show how data input, processing and results output could be incorporated into software for modelling circular ion mobility data. 
