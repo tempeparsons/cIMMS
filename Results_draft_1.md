@@ -1,4 +1,27 @@
-# <strong>Results</strong>
+# <strong>Interpretation of cyclic ion mobility mass spectrometry data using a Gaussian Mixture Model</strong>
+
+<br>
+
+## <strong>Introduction</strong>
+
+Type 2 diabetes is one of the leading causes of disability worldwide. Its incidence has increased rapidly in the last few decades and it continues to do so (Moore et al.). Human islet amyloid polypeptide (hIAPP) is stored in the beta cell along with insulin secretory granules and plays a role in regulating glucose metabolism (Akter et al.). The accumulation of hIAPP aggregates has been shown to correlate with the severity of type 2 diabetes and studies suggest the amyloid fibrils are toxic to beta cells - but that the pre-fibril form where several soluble monomers have formed a soluble oligomer appears even more toxic (Moore et al.). Understanding the soluble structure of hIAPP would provide insights into how these oligomers are formed and why they are cytotoxic. Although structures have been derived for various fibrillar forms (Cao et al.), hIAPP is an intrinsically disordered protein whose monomeric or oligomeric structure cannot be elucidated through crystallography.
+
+One technique that has proved important in helping elucidate the structures of complete or partially disordered proteins is ion-mobility (Dodds and Baker). In structural IM, a purified protein, complex or other molecule is delivered into the instrument such that non-covalent interactions within the macromolecule(s), and hence structural information, is retained (Eldrid and Thalassinos; Christofi and Barran). In essence, the technique measures the time taken for a molecule to move through a neutral gas. The more unfolded the macromolecule, the larger the area that can collide with gas molecules, so the longer it takes to arrive at the detector. This area is referred to as the collisional cross section (CCS) (Gabelica et al.).
+
+When ion-mobility is coupled to mass spectrometry IM can be performed on a selected mass/charge (m/z) window (Christofi and Barran). This increased resolution of peaks within the arrival time distribution data because, although structural IM is performed on a purified solution, a large array of conformers and charge states are present. The applicability of ion-mobility has been further increased by combining it with other structural evidence such as molecular dynamics or crystallography datasets. Here, the CCS calculated from arrival time data can show which theoretically derived structures are correct or reveal the true mobility range of a crystal structure (Christofi and Barran; Moore et al.). IM-MS can yield very precise structural information in comparison studies where the CCS obtained from comparative studies of e.g. proteins with point mutations or highly similar proteins from different species show directly the sequence responsible for certain unfolding responses (Christofi and Barran). Structural integrity can be interrogated yet further by introducing an external disruption such as a voltage, or ramped sequence of voltages, and measuring the change in population of unfolding species (Allison, Barran, Benesch, et al.; Fernandez‑Lima et al.). 
+
+These advances have dramatically increased the resolution and applicability of IM-MS but are inherently limited in the sense that the unfolding products of the parent protein must be examined as a whole. It is not possible, for example, to selectively trap multiple unfolding products and investigate their stability individually. This way the structural routes from parent to particular product could be traced, which is critical for understanding formation of amyloid fibrils. The advent of cyclic IM-MS has changed this (Eldrid and Thalassinos). In this technique, the linear drift tube is replaced with a cyclic IM device. Not only does the longer drift distance increase resolution, but the point of ion entry/exit can store ions of a selected mobility i.e. an ion 'slice' from the mobility circuit. Selected, stored ions can be returned to the mobility circuit and unfolding can be induced by a voltage before or after the circuit, providing great precision and flexibility in experimental design and data accumulation (Giles et al.). 
+
+In order for arrival time data to be converted into CCS's, the total arrival time spectrum must be deconvoluted into its component peaks, as each peak represents an unfolding structure (Allison, Barran, Benesch, et al.). A large protein or protein complex subject to several voltage steps may contain many peaks, of which each mean and variance will represent a different degree of unfolding. 
+
+In this study we compare structural stability of two slices of IAPPs from human and from rat by identifying the mean and variance of peaks in arrival time data. Rats, and some other species not susceptible to type 2 diabetes, have IAPP variants which do not form aggregates. Although most of the sequence is conserved between al variants, some short, specific regions are associated with aggregation (Wu and Shea; Cao et al.). This, plus the existence of molecular dynamic simulations for IAPP (Moore et al.), make this subject ideally suited to IM-MS. 
+
+Arrival time data for each slice was obtained prior to this study by passing rat and human parent polypeptides around the cyclic drift track, selecting the two most prominent unfolding products from each, then subjecting these to a ramped voltage. Typically, peak identification would be carried out using one of the available software suites for IM-MS (Allison, Barran, Benesch, et al.; Allison, Barran, Cianférani, et al.). However, data from cyclic IM-MS is more complex for this software to be of practical use, as one parent protein can generate multiple datasets depending on the number of mobility slices selected and voltage ramps performed. This study therefore aims to find a method for identifying peaks which is straightforward enough that it can be easily incorporated into a future piece of software written specifically for cyclic IM-MS. This study also presents some preliminary aspects of data visualisation for this hypothetical software.
+<br>
+<br>
+
+
+## <strong>Results</strong>
 
 In this study we applied Gaussian Mixture Modelling (GMM) to cyclic ion mobility mass spectrometry (cIMMS) data from for four test datasets. Each dataset described the behaviour of a peptide hormone from a particular starting structure, after it was exposed to increasing voltages that further disrupted its folding. Islet amyloid polypeptide peptide hormone from human (hIAPP) or rat (rIAPP) was presenting in two starting structures, _A and _B, making four datasets in total: hIAPP_A, hIAPP_B, rIAPP_A, rIAPP_B. As these starting structures were subjectd to inceasing voltages, they unfolded yet further. The presence of a structural species is marked by a sharp peak in ion intensity at the detector. More unfolded structures take longer to arrive at the detector. However, the parameters of each intensity peak (and therefore the nature of the structure) are not immediately obvious from the entire set of arrival time data for all tested voltages, although these peaks can be assumed to have Gaussian distributions. The results below outline a method by which the means and variance of each peak, and likely number of peaks, can be determined from total arrival time data. Often onyl a single dataset is shown in a figure but all datasets can be plotted using functions in the Methods section.
 
@@ -102,13 +125,13 @@ The residual plot indicated a reasonable fit between the modelled and original d
 
 ![](./images/Fig11.png)
 
-<font size="1"><strong>Figure 11. Interpolation of hIAPP_B data using the CloughTocher interpolation method from SciPy.</strong> RMSD for each method is in black and green text, respectively.  Descriptions for Figs. 12A, B and C are as for Figure 9.</font>
+<font size="1"><strong>Figure 11. Interpolation of rIAPP_A data using the RectBivariateSpline and CloughTocher interpolation method from SciPy.</strong> RMSD for each method is in black and green text, respectively.  Descriptions for Figs. 12A, B and C are as for Figure 9.</font>
 <br>
 <br>
 
 ![](./images/Fig12.png)
 
-<font size="1"><strong>Figures 12. Interpolation of hIAPP_B data using the CloughTocher interpolation method from SciPy.</strong> RMSD for each method is in black and green text, respectively.  Descriptions for Figs. 12A, B and C are as for Figure 9.</font>
+<font size="1"><strong>Figures 12. Interpolation of rIAPP_B data using thee RectBivariateSpline and CloughTocher interpolation method from SciPy.</strong> RMSD for each method is in black and green text, respectively.  Descriptions for Figs. 12A, B and C are as for Figure 9.</font>
 <br>
 <br>
 
@@ -154,4 +177,73 @@ In the current version of the code, if the most intense peak is more than 12 y-u
 <br>
 <br>
 Taken together, these results show that Gaussian Mixture Modelling provides a mechanism for deconvoluting the signal from circular ion mobility mass spectrometry. The large data range means than modules enabling weighting of datapints, such as Pomegranate, are more suitable than more commonly used modeules such as SciKitLearn. Sucessfull Gaussian modelling is subject to data interpolation inbetween the selected time points and voltages, otherwise the data is not continuous and cannnot be modelled using this method. As evidenced by these results, the interpolation method used can have an appeciable effect on how well Gaussians can be fitted to the data. These results also start to show how data input, processing and results output could be incorporated into software for modelling circular ion mobility data. 
+<br>
+<br>
 
+## <strong>Discussion</strong>
+
+This study investigates suitable methods for fitting Gaussian peaks to arrival time data from circular ion mobility mass spectrometry. Being able to quickly identify peaks in intensity data collected over time and at different voltages, and describe changes in the properties, allows researchers to measure changes in protein conformation and, therefore, stability. Contemporary IM-MS software suites (Migas et al. 2017; Lee et al. 2021; Allison et al. 2020) are not designed for the large numbers of datasets that cyclic IM-MS can generate. By designing methods that are fast and based on readily available python packages with a flexible set up, the functions presented in these methods can be easily modified, combined or scaled to any number or shape of data in an ‘arrival time - intensity – voltage’ format. Several graphical output styles and functions for measuring goodness of fit using residuals, BIC and RMSD are presented here (Figs. 6 – 13) that could be incorporated into some future cyclic IM-MS software.
+ <br>
+
+This study has achieved, using a general mixture model and Gaussian distributions, a good fit between the intensity data and data that has been modelled around the means of detected intensity peaks.  However, residual plots (Figs. 8 – 12),  suggest that fits could be improved. Interpolating using the Clough Tocher method (Clough and Tocher 1965) yielded a moderate, but consistent, improvement in RMSD compared to the RectBivariateSpline method. Interpolation techniques have not been exhaustively compared in this study. It is worth noting the 'wobble' in intensity slices in Figure 14A. CloughTocher interpolation is good at interpolating local trends in data (Wang 2004), so may possibly have amplified small, local variance. Techniques for both unstructured and on-grid data are appropriate in this case, meaning that the scipy.interpolate library contains at least five other suitable methods with the same data shape requirements as CloughTocher2DInterpolator (https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.CloughTocher2DInterpolator.html): griddata (https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.griddata.html), linearNDinterpolator (https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.LinearNDInterpolator.html), interpn (https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.interpn.html) and  regulargridinterpolator (https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.RegularGridInterpolator.html). Working these methods into the existing interpolation function could be a worthwhile future investigation. Another possibility for improving fit could be to fit Gaussian-like distributions, such as Poisson or Gamma, both of which are possible using the Pomegranate general mixture model (https://pomegranate.readthedocs.io/en/latest/). It is also possible to use other methods for fitting peaks in Pomegranate such as Markov Chain MonteCarlo, although this is far beyond the scope of the present study. 
+<br>
+
+Although this analysis has been primarily concerned with methods, rather than calculating CCS or attributing changes in CCS to structural features preliminary conclusions about the structural stability of IAPP are nonetheless possible. 
+<br>
+
+After subjecting both human and rat IAPP (hIAPP, rIAPP) to multi-pass ion mobility separations, two distinct structural species (A and B) were sampled from each. The rat version appeared more stable than the human one. rIAPP_A showed consistent arrival time of ~ 62 ms for all voltages (Figs. 11) compared to hIAPP_A (Fig. 9) where arrival tme change from 61 to 64 ms as the voltage increased above 20 V. The absence of shift is rats is consistent with the notion of rat IAPP stability and that rats, along with other species such as pig ,can tolerate excessive food intake (Wu and Shea 2013). 
+Compared to hIAPP_B (Fig. 10), it is interesting to note that both hIAPP_A and rIAPP_A show a decrease in total signal at higher voltages, even if the arrival time of detectable rIAPP_A did not change. This suggests generation of unfolding products below the limit of detection, perhaps because CID, as well as CIU, occurred at the highest voltages.
+<br>
+
+The hIAPP_B unfolding product of the original hIAPP appears considerably more stable than hIAPP_A, as arrival times do not increase with voltage. The initial arrival time for hIAPP_B is slightly later than hIAPP_A (~63 ms vs. ~61 ms), which could indicate that whatever unfolding events could occur has already occurred and hIAPP_B had a greater CCS than hIAPP_A. This would be consistent both the the absence of shift in arrival time, and the continuation of total signal intensity at the lowest and highest voltage for hIAPP_B.
+<br>
+
+Other aspects of hIAPP_B are less straightforward to interpret. Whilst total signal intensity was sustained at the lowest and highest voltages in hIAPP_B, signal intensity decreases at 40V and all but disappears between ~10 and ~20 V. This is visualized most clearly in Figure 17, where the near-absence of difference in arrival times between peaks in signal intensity has resulted in a warning being triggered when the ‘parent_child_peaks’ function, which measures the parent:child peak ratio, is run. It is difficult to envisage a scenario where a single child peak can be larger than its parent. Conceivably, a parent polypeptide’s stability could have a completely non-linear relationship with voltage, such that at 30 and 50 V either the parental structure was unaffected or all children coincidentally had the same arrival time. At 20 and 40 V structures became completely disassociated and were not detected.
+<br>
+
+rIAPP_B shows a similar response to rIAPP_A (Figs. 12, 16), albeit with a later initial arrival time, though this is not immediately obvious, as several low-intensity child peaks produced at high voltages have shorter arrival times than their parent. This is perhaps most easily explained by child structures having completely and partially collapsed, as their CCS is lower than their parent’s. rIAPP_B therefore seems to be less stable than rIAPP_A. The unfolding products must be different from those of hIAPP_A, as no collapse was apparent in Fig. 9. 
+<br>
+
+In summary, results in this study show how the computational challenge of large cyclic IMMS datasets can be approached, although without detailed examination of sequences and CCS's, and using only a handful of test datasets, it is not possible to extend this analysis to any biological conclusions.
+<br>
+<br>
+
+## <strong>References</strong>
+
+Akter, Rehana, et al. “Islet Amyloid Polypeptide: Structure, Function, and Pathophysiology.” Journal of Diabetes Research, vol. 2016, 2016, p. 2798269, doi:10.1155/2016/2798269.
+<br>
+
+Allison, Timothy M., Perdita Barran, Sarah Cianférani, et al. “Computational Strategies and Challenges for Using Native Ion Mobility Mass Spectrometry in Biophysics and Structural Biology.” Analytical Chemistry, vol. 92, no. 16, Aug. 2020, pp. 10872–80, doi:10.1021/acs.analchem.9b05791.
+<br>
+
+Allison, Timothy M., Perdita Barran, Justin L. P. Benesch, et al. “Software Requirements for the Analysis and Interpretation of Native Ion Mobility Mass Spectrometry Data.” Analytical Chemistry, vol. 92, no. 16, Aug. 2020, pp. 10881–90, doi:10.1021/acs.analchem.9b05792.
+<br>
+
+Cao, Qin, et al. “Cryo-EM Structure and Inhibitor Design of Human IAPP (Amylin) Fibrils.” Nature Structural & Molecular Biology, vol. 27, no. 7, July 2020, pp. 653–59, doi:10.1038/s41594-020-0435-3.
+<br>
+
+Clough, R.W. and Tocher, J.L. (1965) Finite Element Stiffness Matrices for Analysis of Plates in Bending. Proceedings of Conference on Matrix Methods in Structural Analysis, 1, 515-545.
+<br>
+
+Christofi, Emilia, and Perdita Barran. “Ion Mobility Mass Spectrometry (IM-MS) for Structural Biology: Insights Gained by Measuring Mass, Charge, and Collision Cross Section.” Chemical Reviews, vol. 123, no. 6, Mar. 2023, pp. 2902–49, doi:10.1021/acs.chemrev.2c00600.
+<br>
+
+Dodds, James N., and Erin S. Baker. “Ion Mobility Spectrometry: Fundamental Concepts, Instrumentation, Applications, and the Road Ahead.” Journal of the American Society for Mass Spectrometry, vol. 30, no. 11, Nov. 2019, pp. 2185–95, doi:10.1007/s13361-019-02288-2.
+<br>
+
+Eldrid, Charles, and Konstantinos Thalassinos. “Developments in Tandem Ion Mobility Mass Spectrometry.” Biochemical Society Transactions, vol. 48, no. 6, Dec. 2020, pp. 2457–66, doi:10.1042/BST20190788.
+<br>
+
+Fernandez-Lima, F. A., et al. “Note: Integration of Trapped Ion Mobility Spectrometry with Mass Spectrometry.” The Review of Scientific Instruments, vol. 82, no. 12, Dec. 2011, p. 126106, doi:10.1063/1.3665933.
+<br>
+
+Gabelica, Valérie, et al. “Recommendations for Reporting Ion Mobility Mass Spectrometry Measurements.” Mass Spectrometry Reviews, vol. 38, no. 3, May 2019, pp. 291–320, doi:10.1002/mas.21585.
+<br>
+
+Giles, Kevin, et al. “A Cyclic Ion Mobility-Mass Spectrometry System.” Analytical Chemistry, vol. 91, no. 13, July 2019, pp. 8564–73, doi:10.1021/acs.analchem.9b01838.
+<br>
+
+Moore, Sandra J., et al. “Characterisation of the Structure and Oligomerisation of Islet Amyloid Polypeptides (IAPP): A Review of Molecular Dynamics Simulation Studies.” Molecules (Basel, Switzerland), vol. 23, no. 9, Aug. 2018, doi:10.3390/molecules23092142.
+<br>
+
+Wu, Chun, and Joan-Emma Shea. “Structural Similarities and Differences between Amyloidogenic and Non-Amyloidogenic Islet Amyloid Polypeptide (IAPP) Sequences and Implications for the Dual Physiological and Pathological Activities of These Peptides.” PLoS Computational Biology, vol. 9, no. 8, Aug. 2013, p. e1003211, doi:10.1371/journal.pcbi.1003211.
