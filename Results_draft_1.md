@@ -60,6 +60,14 @@ Appendix A
 <br>
 <br>
 
+## <strong>Abstract</strong>
+<br>
+<br>
+
+## <strong>Acknowledgements</strong>
+I would like to thank Aisha Ben-Younis for generating and supplying me with data and Dr. Tim Stevens for introducing me to Pomegranate and explaining the Standard Deviation Classes to me. 
+<br>
+<br>
 
 ## <strong>Introduction</strong>
 
@@ -87,22 +95,30 @@ This study therefore aims to find a method for identifying peaks which is straig
 <br>
 
 ## <strong>Methods of investigation and analysis</strong>
+<br>
 <em>Generating datasets:</em>
 <br>
 Lyophilised rat and human IAPP samples were preparaed and analyzed on a cIM QToF (Waters) according to Eldrid, Ben-Younis et al by Aisha Ben-Younis and ther members of the Thalassinos group. Briefly, human and rat IAPP were passed around the cIM. For each species, two arrival time distribution slices (A and B) were ejected from the cIM, stored, then re-injected for further activation. This yielded a single text file for every voltage at which slices were activated, containing arrival time and intensity readings.
+<br>
 
-Exploring the data in one dimension:
+<em>Exploring the data in one dimension:</em>
 
 <em>Aplying a GMM to two dimensional data:</em>
 <br>
 Gaussian mixture fitting was done first using the SciKitLern GMM module, then the Pomegrante GMM module. Initially, the individual 'histogram-like' voltage datasets were arranged together in one two-dimensional array per species per slice (see line 'xdata += [arrtime[index]]*n' in 'extract_data_for2d' function, Appendix A). The number of values required to represent the highest values was large enough to slow processing, so the same function generates lists of values divided by 100 for each arrival time. The next two sections (### PLOTS FIGURE 2A-D ### and ### PLOTS FIGURE 2E-H, Appendix A) use return objects for plotting. The 'XYArrDiv' return object is passed to the 'skl_gmmfit_plot_histdata' function (Appendix A) and is used for the GMM fit using the SciKitLearn module. A 'fake' version of hIAPP_A was also generated where the dynamic range of intensities was reduced manually whilst maintaining peak shape, as judged by eye, as much as possible. After exploring the parameters of SciKitLearn's GaussianMixture function in the 'explore_sklgmm_params' function (Appendix A).
 <br>
 <br>
-Non-zero data was re-extracted from text files for fitting using Pomegranate GMM. Briefly, all voltages and arrival times were sorted, indexed and stored in a dictionary. An array of zeros was filled by taking volatge-arrivaltime coordinates and filling in the corresponding intensity values at each coordinate (j = vidx[v], k = aidx[a], input_density[j,k] = intens in the 'extract_data_gmmfitPOM_plot' function, Appendix A). Standard deviations were defined by initiating two classes (MinStdNormalDistributionX and Y, in 'extract_data_gmmfitPOM_plot' Appendix A). The GeneralMixtureModel.from_samples method was used with parameters set as in ('extract_data_gmmfitPOM_plot' Appendix A). This methods returns data points as log probabilities, which was unlogged and returned to the original grid shpe for plotting. 
+Non-zero data was re-extracted from text files for fitting using Pomegranate GMM. Briefly, all voltages and arrival times were sorted, indexed and stored in a dictionary. An array of zeros was filled by taking volatge-arrivaltime coordinates and filling in the corresponding intensity values at each coordinate (j = vidx[v], k = aidx[a], input_density[j,k] = intens in the 'extract_data_gmmfitPOM_plot' function, Appendix A). Standard deviations were defined by initiating two classes (MinStdNormalDistributionX and Y, in 'extract_data_gmmfitPOM_plot' Appendix A). The GeneralMixtureModel.from_samples method was used with parameters set as in ('extract_data_gmmfitPOM_plot' Appendix A). This methods returns data points as log probabilities, which was unlogged and returned to the original grid shape for plotting. 
 
-Investigating different interpolation techniques and measuring goodness of fit:
+<em>Investigating different interpolation techniques:</em>
+<br>
+The impact of interpolating data in both the x and y directions was investigated using three methods available in SciPy: interp2d(scipy.interpolate.interp2d.html), rectbivariatespline(scipy.interpolate.RectBivariateSpline.html) and the CloughTocher interpolator(scipy.interpolate.CloughTocher2DInterpolator.html). The 'compare_interp2d_RBVspine_interpolation' function (Appendix A) extracts and formats data into lists of volatges and arrival times, plus a 2D array (time, V) of intensity values for comparing the first two methods using density plots. The return objects from this function were not forwarded for fitting; instead, the data from the last two interpolatins methods was fitted and compared. The second function ('extract_data_for_RB_CT_interpolation', Appendix A) extracts data into three lists (voltage, arrival time and intensity), with voltage containing a -10 value, corresponding to an empty set of arrival time values, so data could be accurately interpolated in a Gaussian peak close to y=0. These lists were then passed to either the  RBinterp_PomegranateGMM or  CTinterp_PomegranateGMM functions (Appendix A), which returned a large number of objects packaged into a dictionary, that was passed to the 'plot_fit' function (Appendix A) for comparison of desity plots. 
+<br>
 
-Representing changes in shape and intensity of Gaussians over time and voltage:
+<em>Measuring goodness of fit:</em>
+The dictionary returned by above functions, which performed GMM on interpolated data, contained the return objects 'resid' and 'rmsd'. The residuals in resid were calculated by subtracting the sum-normalised interpolated input data from the sum-normalised fitted output data. Root means square deviation (RMSD) was calulated by taking the square root or the mean of the squared residuals. The residuals were plotted using a hot-cool colour scheme to show increases-decreases in fitted data compared to the original, with RMSD values overlayed. The optimal number of components for GMM fitting was estimated using the Bayesian Information Criterion (BIC). Unlike the SciKitLearn GMM module, Pomegranate does not automatically calculate BIC values. These were calculated manualy using ' bic = float(df * np.log(len(smoothxycoords)) - 2.0 * lp)' (Appendix A) in any functions involving Pomegranate GMM. This is elaborated on in the results section.  
+
+<em>Representing changes in shape and intensity of Gaussians over time and voltage:</em>
 
 
 ## <strong>Results</strong>
@@ -304,10 +320,6 @@ In summary, results in this study show how the computational challenge of large 
 <br>
 <br>
 
-## <strong>Acknowledgements</strong>
-I would like to thank Aisha Ben-Younis for generating and supplying me with data and Dr. Tim Stevens for introducing me to Pomegranate and explaining the Standard Deviation Classes to me. 
-<br>
-<br>
 
 ## <strong>References</strong>
 Akter, Rehana, et al. “Islet Amyloid Polypeptide: Structure, Function, and Pathophysiology.” Journal of Diabetes Research, vol. 2016, 2016, p. 2798269, doi:10.1155/2016/2798269.
