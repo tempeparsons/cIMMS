@@ -1,30 +1,116 @@
 # <strong>Interpretation of cyclic ion mobility mass spectrometry data using a Gaussian Mixture Model</strong>
 
+AUTHOR: DR. HARRIET T PARSONS<br>
+SUPERVISOR: PROF. KONSTANTINOS THALASSINOS, UNIVERSITY COLLEGE LONDON<br><br>
+
+This report is the result of my own work, unless explicitly indicated.<br><br>
+
+MSC BIOINFORMATICS WITH SYSTEMS BIOLOGY PROJECT REPORT<br>
+DEPARTMENT OF BIOLOGICAL SCIENCES,<br>
+BIRKBECK COLLEGE,<br>
+UNIVERSITY OF LONDON<br>
+
 <br>
+
+Abstract
+<br>
+<br>
+Acknowledgements
+<br>
+<br>
+Introduction
+<br>
+<br>
+Methods of investigation and analysis<br>
+Generating datasets<br>
+Exploring the data in one dimension<br>
+Aplying a GMM to two dimensional data<br>
+Investigating different interpolation techniques and measuring goodness of fit<br>
+Representing changes in shape and intensity of Gaussians over time and voltage<br>
+<br>
+Results<br>
+Intial exploration using one-dimensional data<br>
+Figure 1<br>
+Figure 2<br>
+Clustering using the SciKitLearn GMM module in two dimensions<br>
+Figure 3<br>
+Figure 4<br>
+Figure 5<br>
+Clustering in two dimensions using the Pomegranate module<br>
+Figure 6<br>
+Investigating different interpolation techniques and measuring goodness of fit<br>
+Figure 7<br>
+Figure 8<br>
+Figure 9<br>
+Figure 10<br>
+Figure 11<br>
+Figure 12<br>
+Figure 13<br>
+Representing changes in shape and intensity of Gaussians over time and voltage<br>
+Figure 14<br>
+Figure 15<br>
+Figure 16<br>
+Figure 17<br>
+<br>
+Discussion and conclusions
+<br>
+References
+<br>
+Appendix A
+<br>
+<br>
+
 
 ## <strong>Introduction</strong>
 
+<em>A medical context for ion-mobility structural studies:</em> <br>
 Type 2 diabetes is one of the leading causes of disability worldwide. Its incidence has increased rapidly in the last few decades and it continues to do so (Moore et al.). Human islet amyloid polypeptide (hIAPP) is stored in the beta cell along with insulin secretory granules and plays a role in regulating glucose metabolism (Akter et al.). The accumulation of hIAPP aggregates has been shown to correlate with the severity of type 2 diabetes and studies suggest the amyloid fibrils are toxic to beta cells - but that the pre-fibril form where several soluble monomers have formed a soluble oligomer appears even more toxic (Moore et al.). Understanding the soluble structure of hIAPP would provide insights into how these oligomers are formed and why they are cytotoxic. Although structures have been derived for various fibrillar forms (Cao et al.), hIAPP is an intrinsically disordered protein whose monomeric or oligomeric structure cannot be elucidated through crystallography.
 
+<em>Ion-mobility mass spectrometry:</em> <br>
 One technique that has proved important in helping elucidate the structures of complete or partially disordered proteins is ion-mobility (Dodds and Baker). In structural IM, a purified protein, complex or other molecule is delivered into the instrument such that non-covalent interactions within the macromolecule(s), and hence structural information, is retained (Eldrid and Thalassinos; Christofi and Barran). In essence, the technique measures the time taken for a molecule to move through a neutral gas. The more unfolded the macromolecule, the larger the area that can collide with gas molecules, so the longer it takes to arrive at the detector. This area is referred to as the collisional cross section (CCS) (Gabelica et al.).
 
 When ion-mobility is coupled to mass spectrometry IM can be performed on a selected mass/charge (m/z) window (Christofi and Barran). This increased resolution of peaks within the arrival time distribution data because, although structural IM is performed on a purified solution, a large array of conformers and charge states are present. The applicability of ion-mobility has been further increased by combining it with other structural evidence such as molecular dynamics or crystallography datasets. Here, the CCS calculated from arrival time data can show which theoretically derived structures are correct or reveal the true mobility range of a crystal structure (Christofi and Barran; Moore et al.). IM-MS can yield very precise structural information in comparison studies where the CCS obtained from comparative studies of e.g. proteins with point mutations or highly similar proteins from different species show directly the sequence responsible for certain unfolding responses (Christofi and Barran). Structural integrity can be interrogated yet further by introducing an external disruption such as a voltage, or ramped sequence of voltages, and measuring the change in population of unfolding species (Allison, Barran, Benesch, et al.; Fernandez‑Lima et al.). 
 
+<em>The importance of cyclic ion-mobility mass spectrometry:</em><br>
 These advances have dramatically increased the resolution and applicability of IM-MS but are inherently limited in the sense that the unfolding products of the parent protein must be examined as a whole. It is not possible, for example, to selectively trap multiple unfolding products and investigate their stability individually. This way the structural routes from parent to particular product could be traced, which is critical for understanding formation of amyloid fibrils. The advent of cyclic IM-MS has changed this (Eldrid and Thalassinos). In this technique, the linear drift tube is replaced with a cyclic IM device. Not only does the longer drift distance increase resolution, but the point of ion entry/exit can store ions of a selected mobility i.e. an ion 'slice' from the mobility circuit. Selected, stored ions can be returned to the mobility circuit and unfolding can be induced by a voltage before or after the circuit, providing great precision and flexibility in experimental design and data accumulation (Giles et al.). 
 
+
+<em>The scope and objectives of this study:</em><br>
 In order for arrival time data to be converted into CCS's, the total arrival time spectrum must be deconvoluted into its component peaks, as each peak represents an unfolding structure (Allison, Barran, Benesch, et al.). A large protein or protein complex subject to several voltage steps may contain many peaks, of which each mean and variance will represent a different degree of unfolding. 
-
-In this study we compare structural stability of two slices of IAPPs from human and from rat by identifying the mean and variance of peaks in arrival time data. Rats, and some other species not susceptible to type 2 diabetes, have IAPP variants which do not form aggregates. Although most of the sequence is conserved between al variants, some short, specific regions are associated with aggregation (Wu and Shea; Cao et al.). This, plus the existence of molecular dynamic simulations for IAPP (Moore et al.), make this subject ideally suited to IM-MS. 
-
-Arrival time data for each slice was obtained prior to this study by passing rat and human parent polypeptides around the cyclic drift track, selecting the two most prominent unfolding products from each, then subjecting these to a ramped voltage. Typically, peak identification would be carried out using one of the available software suites for IM-MS (Allison, Barran, Benesch, et al.; Allison, Barran, Cianférani, et al.). However, data from cyclic IM-MS is more complex for this software to be of practical use, as one parent protein can generate multiple datasets depending on the number of mobility slices selected and voltage ramps performed. This study therefore aims to find a method for identifying peaks which is straightforward enough that it can be easily incorporated into a future piece of software written specifically for cyclic IM-MS. This study also presents some preliminary aspects of data visualisation for this hypothetical software.
+<br>
+In this study I compare structural stability of two slices of IAPPs from human and from rat by identifying the mean and variance of peaks in arrival time data. Rats, and some other species not susceptible to type 2 diabetes, have IAPP variants which do not form aggregates. Although most of the sequence is conserved between al variants, some short, specific regions are associated with aggregation (Wu and Shea; Cao et al.). This, plus the existence of molecular dynamic simulations for IAPP (Moore et al.), make this subject ideally suited to IM-MS. 
+<br>
+Arrival time data for each slice was obtained prior to this study by passing rat and human parent polypeptides around the cyclic drift track, selecting the two most prominent unfolding products from each, then subjecting these to a ramped voltage. Typically, peak identification would be carried out using one of the available software suites for IM-MS (Allison, Barran, Benesch, et al.; Allison, Barran, Cianférani, et al.). However, data from cyclic IM-MS is more complex for this software to be of practical use, as one parent protein can generate multiple datasets depending on the number of mobility slices selected and voltage ramps performed. 
+<br>
+This study therefore aims to find a method for identifying peaks which is straightforward enough that it can be easily incorporated into a future piece of software written specifically for cyclic IM-MS. This study also presents some preliminary aspects of data visualisation for this hypothetical software.
 <br>
 <br>
+
+## <strong>Methods of investigation and analysis</strong>
+<em>Generating datasets:</em>
+<br>
+Lyophilised rat and human IAPP samples were preparaed and analyzed on a cIM QToF (Waters) according to Eldrid, Ben-Younis et al by Aisha Ben-Younis and ther members of the Thalassinos group. Briefly, human and rat IAPP were passed around the cIM. For each species, two arrival time distribution slices (A and B) were ejected from the cIM, stored, then re-injected for further activation. This yielded a single text file for every voltage at which slices were activated, containing arrival time and intensity readings.
+
+Exploring the data in one dimension:
+
+<em>Aplying a GMM to two dimensional data:</em>
+<br>
+Gaussian mixture fitting was done first using the SciKitLern GMM module, then the Pomegrante GMM module. Initially, the individual 'histogram-like' voltage datasets were arranged together in one two-dimensional array per species per slice (see line 'xdata += [arrtime[index]]*n' in 'extract_data_for2d' function, Appendix A). The number of values required to represent the highest values was large enough to slow processing, so the same function generates lists of values divided by 100 for each arrival time. The next two sections (### PLOTS FIGURE 2A-D ### and ### PLOTS FIGURE 2E-H, Appendix A) use return objects for plotting. The 'XYArrDiv' return object is passed to the 'skl_gmmfit_plot_histdata' function (Appendix A) and is used for the GMM fit using the SciKitLearn module. A 'fake' version of hIAPP_A was also generated where the dynamic range of intensities was reduced manually whilst maintaining peak shape, as judged by eye, as much as possible. After exploring the parameters of SciKitLearn's GaussianMixture function in the 'explore_sklgmm_params' function (Appendix A).
+<br>
+<br>
+Non-zero data was re-extracted from text files for fitting using Pomegranate GMM. Briefly, all voltages and arrival times were sorted, indexed and stored in a dictionary. An array of zeros was filled by taking volatge-arrivaltime coordinates and filling in the corresponding intensity values at each coordinate (j = vidx[v], k = aidx[a], input_density[j,k] = intens in the 'extract_data_gmmfitPOM_plot' function, Appendix A). Standard deviations were defined by initiating two classes (MinStdNormalDistributionX and Y, in 'extract_data_gmmfitPOM_plot' Appendix A). The GeneralMixtureModel.from_samples method was used with parameters set as in ('extract_data_gmmfitPOM_plot' Appendix A). This methods returns data points as log probabilities, which was unlogged and returned to the original grid shpe for plotting. 
+
+Investigating different interpolation techniques and measuring goodness of fit:
+
+Representing changes in shape and intensity of Gaussians over time and voltage:
 
 
 ## <strong>Results</strong>
 
-In this study we applied Gaussian Mixture Modelling (GMM) to cyclic ion mobility mass spectrometry (cIMMS) data from for four test datasets. Each dataset described the behaviour of a peptide hormone from a particular starting structure, after it was exposed to increasing voltages that further disrupted its folding. Islet amyloid polypeptide peptide hormone from human (hIAPP) or rat (rIAPP) was presenting in two starting structures, _A and _B, making four datasets in total: hIAPP_A, hIAPP_B, rIAPP_A, rIAPP_B. As these starting structures were subjectd to inceasing voltages, they unfolded yet further. The presence of a structural species is marked by a sharp peak in ion intensity at the detector. More unfolded structures take longer to arrive at the detector. However, the parameters of each intensity peak (and therefore the nature of the structure) are not immediately obvious from the entire set of arrival time data for all tested voltages, although these peaks can be assumed to have Gaussian distributions. The results below outline a method by which the means and variance of each peak, and likely number of peaks, can be determined from total arrival time data. Often onyl a single dataset is shown in a figure but all datasets can be plotted using functions in the Methods section.
-
+In this study I applied Gaussian Mixture Modelling (GMM) to cyclic ion mobility mass spectrometry (cIMMS) data from for four test datasets. Each dataset described the behaviour of a peptide hormone from a particular starting structure, after it was exposed to increasing voltages that further disrupted its folding. Islet amyloid polypeptide peptide hormone from human (hIAPP) or rat (rIAPP) was presenting in two starting structures, _A and _B, making four datasets in total: hIAPP_A, hIAPP_B, rIAPP_A, rIAPP_B. As these starting structures were subjectd to inceasing voltages, they unfolded yet further. The presence of a structural species is marked by a sharp peak in ion intensity at the detector. More unfolded structures take longer to arrive at the detector. However, the parameters of each intensity peak (and therefore the nature of the structure) are not immediately obvious from the entire set of arrival time data for all tested voltages, although these peaks can be assumed to have Gaussian distributions. The results below outline a method by which the means and variance of each peak, and likely number of peaks, can be determined from total arrival time data. Often only a single dataset is shown in a figure but all datasets can be plotted using functions in Appendix A.
+<br>
+<br>
+<em>Intial exploration using one-dimensional data:</em><br>
 Clustering methods, including GMM, can be applied to one, two or higher dimensional data. The current data comprises meaurements in time, voltage and intensity. If, however, intensity is represented by the frequency of data points at a given time measurement, the data effectively takes on the properties of a histogram and the dimensionality is reduced. If the clustering is performed separately for each voltage, Gaussian peaks can be fitted in a single dimension. Being unfamiliar with GMM, I began investigations into its applicability to this data by performing 1D clustering on each voltage using the GMM module in the SciKitLearn library (Figure 1).  
 <br>
 
@@ -43,11 +129,12 @@ Before applying 2D Gaussian fitting, the overall shape of all test datasets was 
 
 ![](./images/Fig2EtoH.png)
 
-<font size="1"><strong>Figure 3. Visualising the shapes of a dataset using 2d histograms and contour maps.</strong> 2D arrays were generated with one layer containing non-zero arrival times proportional to the intensity and another with corresponding voltages. For each dataset this was plotted as a 2D histogram using the numpy.histogram2d function and coloured from highest intensity (yellow) to lowest (black) as follows: hIAPP_A; 2A, hIAPP_B; 2B, rIAPP_A; 2C, rIAPP_B; 2D. Equivalent arrays were generated for plotting contour maps (Figs. 2E - H). </font>
+<font size="1"><strong>Figure 2. Visualising the shapes of a dataset using 2d histograms and contour maps.</strong> 2D arrays were generated with one layer containing non-zero arrival times proportional to the intensity and another with corresponding voltages. For each dataset this was plotted as a 2D histogram using the numpy.histogram2d function and coloured from highest intensity (yellow) to lowest (black) as follows: hIAPP_A; 2A, hIAPP_B; 2B, rIAPP_A; 2C, rIAPP_B; 2D. Equivalent arrays were generated for plotting contour maps (Figs. 2E - H). </font>
 <br>
 <br>
 
-A number of parameters in the SciKitLearn GMM modeule must be optimised for fitting 2-dimensional data. GMM uses the EM algorithm to find the best model for the data. Essentially, the EM algorithm guesses starting means and variances for a dataset where the means, variances and the number of components (or peaks) are unknown. The algorithm creates a new dataset with the guessed means and variances, then calculates the probability that the original data came from Gaussian peaks described by the guessed parameters. The contribution of each data point to this total probability score is weighted by each datapoint's distance from the guessed means. This allows the data fit to be improved; if the guessed means were distant from most points, the summed probabiltiy score would be low. The algorithm then alters the guessed parameters so that the assessed probability of all data points is increased. Once the log liklihood of this summed score is not increasing appreciably between guesses (using a pre-determined threshold), then the best data model is said to have been achieved. Clearly, therefore, the method used for taking the initial guess will profoundly impact the final model. 
+<em>Clustering using the SciKitLearn GMM module in two dimensions:</em><br>
+A number of parameters in the SciKitLearn GMM module must be optimised for fitting 2-dimensional data. GMM uses the EM algorithm to find the best model for the data. Essentially, the EM algorithm guesses starting means and variances for a dataset where the means, variances and the number of components (or peaks) are unknown. The algorithm creates a new dataset with the guessed means and variances, then calculates the probability that the original data came from Gaussian peaks described by the guessed parameters. The contribution of each data point to this total probability score is weighted by each datapoint's distance from the guessed means. This allows the data fit to be improved; if the guessed means were distant from most points, the summed probabiltiy score would be low. The algorithm then alters the guessed parameters so that the assessed probability of all data points is increased. Once the log liklihood of this summed score is not increasing appreciably between guesses (using a pre-determined threshold), then the best data model is said to have been achieved. Clearly, therefore, the method used for taking the initial guess will profoundly impact the final model. 
 
 SciKitLearn offers three main types of ititialisation method: k-means, a random selection from the original data points or a random selection of points close the mean of the total dataset. Once the method has been chosen, the number of components must be chosen. Ideally this would be the same as the real number of Gaussian peaks but this is, of course, unknown. 
 
@@ -74,7 +161,9 @@ Secondly, modelling in 2D did not produce even moderately comparable clusters (F
 <br>
 
 The error bars in Figure 3A-D revealed an extremely unequal variance in the x and y directions. If more unequal that assumed by the 'diagonal' covariance type, this could have explained the failure to fit the data. Although time and voltage are continuous variables by nature, in these datasets they were both effectively being used as discreet data, with 200 categories in the time dimension and up to 8 in the voltage dimension. GMM is only suitable for continuous data, so interpoltion of intervening data points in both dimensions was necessary. The very large range in intensitiy measurements (Fig. 1) may also have been compromising the detection of smaller intensity peaks in Figure 3, although this was likely of secondary importance. 
-
+<br>
+<br>
+<em>Investigating the impact of dynamic range on model fit failure:</em><br>
 The contribution of intensity range to the model failure was investigated first, as this could be assessed relatively quickly by artificially lowering the data range. Global adjustments such as logging or sqaure rooting would have removed the Gaussian shape of the data. Instead, artifical data was generated by manually altering voltage sets with the lowest and highest intensity measurements whilst judging maintenance of the peak shape by eye. For ease of comparison, the same analysis was performed as in Figure 3. At 2, 3 and 4 components, the the best fitting model using the artificial data was closer to the original shape of the real data than any model fitted to the real data (Fig. 5). This suggested that the very large data range was compromising the ability of the SciKitLearn GMM function to fit Gaussians to this data. However at 4, and especially 5 components, the same effect was observed as in Figure 3 where the function started to define cluster by voltage rather than arrival times of unfolding proteins; the very large data range seemed to have detectable but marginal impact on model fitting failure. 
 <br>
 
@@ -83,6 +172,8 @@ The contribution of intensity range to the model failure was investigated first,
 <font size="1"><strong>Figure 5. 2-dimensional Gaussian mixture modelling of semi-artifical hIAPP_A data using the SKL GMM module.</strong> Source data differed from that shown in Fig. 3 in that files containing the most intense peaks (10 Volts) least intense peaks (60 and 70 Volts) had been artificially lowered and raised, respectively. Otherwise all other parameters and analyses were set as in Figure 3. </font>
 <br>
 <br>
+
+<em>Clustering in two dimensions using the Pomegranate module:</em><br>
 Of immediate importance, however, was the first problem that the number of datapoints representing the greatest intensities meant datasets were enormous and investigating multiple components was becoming unfeasibley slow. The need to represent intensity this way was eliminted by using a different modelling library. Pomegranate is a python package that offers a wide range of probabalistic modelling (pomegranate.readthedocs.io/en/latest/). It also allows data points to be weighted, making it easier to deal with high intensity measurements. Required data inputs are a grid of coordinates for each datapoint in one array and another array containing the weighting of each point. The MultivariateGaussianDistribution function from Pomegranate's GeneralMixtureModel module uses 'full' convariance by default. This is converted to independent x and y, by defining the minimum standard x and y deviation as classes and using these in place of MultivariateGaussianDistribution. The minimum standard deviation in these classes can then be changed - thereby allowing the hypothesis to be tested that very unequal standard deviations in Figure 3 were the principal factor behind model failure.
 
 Using the same visualisation scheme and component numbers as in Figures 3 and 5, Gaussians were fitted to the hIAPP_A dataset using Pomegranate, with datapoints weighted by intensity. Firstly, I attempted to reproduce the results from SciKitLearn in which the fit had failed by using Pomegranate's MultivariateGaussianDistribution function. This indeed did produce a similarly failing fit, indicating the two methods were comparable. Setting minimum standard deviation classes dramatically improved the model (Fig. 6); Gaussians now followed intensities rather than voltage at >2 components and the underlying shape of the data was not changing as components were added. Differences in standard deviations were initially set to the differece in data density between Voltage and Arrival Time. After a few attempts, setting minstdX = 0.5 and minstddevY = 8 was found to yield optimal results for the hIAPP_A dataset. BIC is absent from intial investigation using Pomegranate, as this is not calculated automatically as in SciKitLean. BIC calculations in Pomegranate are described toward the end of the Results section. 
@@ -93,7 +184,9 @@ Using the same visualisation scheme and component numbers as in Figures 3 and 5,
 <br>
 <br>
 Although the model fit was greatly improved, manual evaluation of minumum standard deviations for each dataset was impractical, especilly considering software design. The next step was to interpolate the data in both voltage and time dimensions and see whether this allowed successful fitting with little or no adjustment of standard deviation settings. 
-
+<br>
+<br>
+<em>Investigating different interpolation techniques and measuring goodness of fit</em>
 There are a variety of python packages for multivariate data interpolation listed at SciPy, of which nearestNDinterpolator, CloughTocher2DInterpolator interp2, RectBivariateSpline, interpn and RegularGridInterpolator were appropriate for grid-like data. Being familiar with the scipy package interp1D, I decided to start invetigations into optimal 2D data interpolation using Interp2D. Interp2D accepts x(arrival time), y(volatge) and z(intensity) data in array-like formats. Data were smoothed to 200 points in both x and y dminsions, which proved to be a reasonable balance between smoothing and computational time. The ensuing density plot (Fig. 7A) was comparabale to the original data (Fig.2A, E) but low intensity, diffuse artefacts were observed at some peripheries of the data grid (Fig. 7A). Neither parameter adjustment, allowing y-values to be interpolated below zero nor clipping grid values at zero could remove these artefacts of interpolation. Therefore the rect bivariate spline interpolation method was attempted next. The data was reshaped into 1D arrays for X and Y data, and one 2D array for intensity values and default parameters were used. 
 
 ![](./images/Fig7.png)
@@ -144,8 +237,11 @@ I therefore implemented a method for automating measurement of the BIC and RMSD 
 <font size="1"><strong>Figure 13. Assessment of optimal number of components for each of the four test datasets</strong> BIC (13A) and RMSD (13B) between original and modelled data was calculated for 2 - 10 components for each of the test datasets. Figure 13 shows results for hIAPP_A. Other datasets can be plotted using functions in the Methods section. For all plots, error bars show standard error of the mean for 5 repeats.</font>
 <br>
 <br>
-Results showed general, if not completely consistent, agreement between BIC (Fig. 13A) and RMSD (Fig. 13B). A scenario in which choice of components was fully automated might involve, for example, calculating the number of compontents at which the previous gradient was less than half the current one. However, given the sometimes inconsistent results, the safest policy may be to present the user with all the data in Figure 13 for them to decide the optimal number of components.  
+Results showed general, if not completely consistent, agreement between BIC (Fig. 13A) and RMSD (Fig. 13B). A scenario in which choice of components was fully automated might involve, for example, calculating the number of compontents at which the previous gradient was less than half the current one. However, given the sometimes inconsistent results, the safest policy may be to present the user with all the data in Figure 13 for them to decide the optimal number of components.
+<br>
+<br>
 
+<em>Representing changes in shape and intensity of Gaussians over time and voltage:</em><br>
 Having developed a basic method for fitting Gaussians and asessing the quality of fit, I next considered how else this data could be usefully visualised. In addition to the plots already presented, I investigated how to present horizontal and longitudinal sections through the interpolated data at user-select time points, plus an assessment of overall protein stability throughout the experiment. 
 
 Intensity profiles were visualised over voltage and time by 'slicing' data across Y (Fig. 14A) and X (Fig. 14B) grid axes. Slice size and position was easily defined by selecting rows or columns in the 2D numpy array containing the data, in a way that could eventually be controlled through an interactive interface. 
@@ -208,8 +304,12 @@ In summary, results in this study show how the computational challenge of large 
 <br>
 <br>
 
-## <strong>References</strong>
+## <strong>Acknowledgements</strong>
+I would like to thank Aisha Ben-Younis for generating and supplying me with data and Dr. Tim Stevens for introducing me to Pomegranate and explaining the Standard Deviation Classes to me. 
+<br>
+<br>
 
+## <strong>References</strong>
 Akter, Rehana, et al. “Islet Amyloid Polypeptide: Structure, Function, and Pathophysiology.” Journal of Diabetes Research, vol. 2016, 2016, p. 2798269, doi:10.1155/2016/2798269.
 <br>
 
